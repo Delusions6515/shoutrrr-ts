@@ -1,0 +1,12 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_test.go", 
+  "case": "generic-json-payload",
+  "url": "generic://hooks.example.test/notify?template=json&%24context=fixture",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify",
+    "headers": { "content-type": "application/json", "accept": "application/json" },
+    "body": { "message": "hello", "context": "fixture" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_test.go: conflicting custom query keys",
+  "case": "reserved-query-preserves-forwarded-value",
+  "url": "generic://hooks.example.test/notify?__template=forwarded&template=json&%24context=fixture",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify?template=forwarded",
+    "headers": { "content-type": "application/json", "accept": "application/json" },
+    "body": { "message": "hello", "context": "fixture" }
+  }
+}

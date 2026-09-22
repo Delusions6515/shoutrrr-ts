@@ -1,0 +1,12 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_config.go: url.Values.Encode",
+  "case": "service-query-uses-go-encoding",
+  "url": "generic://hooks.example.test/notify?z=last&a=~&a=*&template=json&%24context=fixture",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify?a=~&a=%2A&z=last",
+    "headers": { "content-type": "application/json", "accept": "application/json" },
+    "body": { "message": "hello", "context": "fixture" }
+  }
+}

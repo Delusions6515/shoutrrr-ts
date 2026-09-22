@@ -1,0 +1,32 @@
+{
+  "name": "shoutrrr-ts",
+  "version": "0.1.0",
+  "description": "Node.js compatibility package for Shoutrrr Generic Webhook URLs",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "repository": { "type": "git", "url": "https://github.com/Delusions6515/shoutrrr-ts.git" },
+  "engines": { "node": "^22.0.0 || ^24.0.0" },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "LICENSE", "LICENSES", "THIRD_PARTY_NOTICES.md", "COMPATIBILITY.md"],
+  "scripts": {
+    "build": "tsdown && node scripts/finalize-build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm verify:provenance && pnpm verify:compatibility && pnpm pack:check",
+    "verify:provenance": "node scripts/verify-provenance.mjs",
+    "verify:compatibility": "node scripts/verify-compatibility-fixtures.mjs",
+    "verify:package": "node scripts/verify-package.mjs",
+    "pack:check": "node scripts/packed-install.mjs"
+  },
+  "devDependencies": {
+    "@shoutrrr-ts/core-internal": "workspace:*",
+    "@shoutrrr-ts/generic-internal": "workspace:*",
+    "@types/node": "^22.0.0",
+    "tsdown": "^0.12.9",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  },
+  "publishConfig": { "provenance": true }
+}

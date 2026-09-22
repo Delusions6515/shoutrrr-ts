@@ -1,0 +1,12 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_config.go: ConfigFromWebhookURL",
+  "case": "shortcut-preserves-raw-query",
+  "url": "generic+https://hooks.example.test/notify?signature=~*%2a&space=a%20b&space=a+b",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify?signature=~*%2a&space=a%20b&space=a+b",
+    "headers": { "content-type": "application/json", "accept": "application/json" },
+    "body": "hello"
+  }
+}
