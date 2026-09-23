@@ -58,8 +58,10 @@ for (const [service, info] of Object.entries(services)) {
     if (fixture.goObserved.outcome !== expectedOutcome) {
       throw new Error(`${file} lacks the expected Go outcome`);
     }
-    if (!(new URL(fixture.request.url)).hostname.endsWith(".example.test")) {
-      throw new Error(`${file} must use a synthetic host`);
+    const host = new URL(fixture.request.url).hostname;
+    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net" };
+    if (!host.endsWith(".example.test") && host !== fixedHosts[service]) {
+      throw new Error(`${file} must use a synthetic host or its upstream fixed endpoint`);
     }
     count++;
   }

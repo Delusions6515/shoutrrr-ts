@@ -1,0 +1,27 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/join/join.go: sendToDevices",
+  "case": "join-http-error",
+  "service": "join",
+  "url": "join://Token:fixture-key@join?devices=phone%2Ctablet",
+  "message": "hello",
+  "responseStatus": 503,
+  "request": {
+    "method": "POST",
+    "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=fixture-key&deviceIds=phone%2Ctablet&text=hello",
+    "headers": {
+      "content-type": "text/plain",
+      "accept": ""
+    },
+    "body": ""
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=fixture-key&deviceIds=phone%2Ctablet&text=hello",
+    "headers": {
+      "accept": "",
+      "content-type": "text/plain"
+    },
+    "body": "",
+    "outcome": "http-status-503"
+  }
+}

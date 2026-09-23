@@ -1,0 +1,36 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/mattermost/mattermost_json.go: CreateJSONPayload",
+  "case": "mattermost-overrides-and-icon",
+  "service": "mattermost",
+  "url": "mattermost://bot@push.example.test:2225/fixture-hook/team?icon=smile",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test:2225/hooks/fixture-hook",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello",
+      "username": "bot",
+      "channel": "team",
+      "icon_emoji": "smile"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test:2225/hooks/fixture-hook",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "channel": "team",
+      "icon_emoji": "smile",
+      "text": "hello",
+      "username": "bot"
+    },
+    "outcome": "success"
+  }
+}

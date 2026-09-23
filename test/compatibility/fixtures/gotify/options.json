@@ -1,0 +1,34 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/gotify/gotify_config.go: setURL",
+  "case": "gotify-options",
+  "service": "gotify",
+  "url": "gotify://push.example.test/v1/Aaa.bbb.ccc.ddd?disabletls=Yes&priority=2&title=News",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "http://push.example.test/v1//message?token=Aaa.bbb.ccc.ddd",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "message": "hello",
+      "title": "News",
+      "priority": 2
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "http://push.example.test/v1//message?token=Aaa.bbb.ccc.ddd",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "message": "hello",
+      "priority": 2,
+      "title": "News"
+    },
+    "outcome": "success"
+  }
+}

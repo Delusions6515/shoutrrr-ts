@@ -1,0 +1,26 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/pushover/pushover.go: sendToDevice",
+  "case": "pushover-options",
+  "service": "pushover",
+  "url": "pushover://Token:fixture-key@fixture-user.example.test?devices=phone%2Ctablet&priority=2&title=Release+%2A",
+  "message": "hi *",
+  "request": {
+    "method": "POST",
+    "url": "https://api.pushover.net/1/messages.json",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "accept": ""
+    },
+    "body": "device=phone%2Ctablet&message=hi+%2A&title=Release+%2A&token=fixture-key&user=fixture-user.example.test"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.pushover.net/1/messages.json",
+    "headers": {
+      "accept": "",
+      "content-type": "application/x-www-form-urlencoded"
+    },
+    "body": "device=phone%2Ctablet&message=hi+%2A&title=Release+%2A&token=fixture-key&user=fixture-user.example.test",
+    "outcome": "success"
+  }
+}

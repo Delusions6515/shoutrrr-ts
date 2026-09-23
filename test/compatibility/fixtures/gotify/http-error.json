@@ -1,0 +1,35 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/gotify/gotify.go: Send",
+  "case": "gotify-http-error",
+  "service": "gotify",
+  "url": "gotify://push.example.test/Aaa.bbb.ccc.ddd",
+  "message": "hello",
+  "responseStatus": 503,
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test/message?token=Aaa.bbb.ccc.ddd",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "message": "hello",
+      "title": "Shoutrrr notification",
+      "priority": 0
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test/message?token=Aaa.bbb.ccc.ddd",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "message": "hello",
+      "priority": 0,
+      "title": "Shoutrrr notification"
+    },
+    "outcome": "http-status-503"
+  }
+}

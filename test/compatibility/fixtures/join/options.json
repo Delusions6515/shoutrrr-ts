@@ -1,0 +1,26 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/join/join.go: sendToDevices",
+  "case": "join-options",
+  "service": "join",
+  "url": "join://Token:fixture-key@join?devices=phone&title=Release+%2A&icon=https%3A%2F%2Fexample.test%2Ficon",
+  "message": "hi *",
+  "request": {
+    "method": "POST",
+    "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=fixture-key&deviceIds=phone&icon=https%3A%2F%2Fexample.test%2Ficon&text=hi+%2A&title=Release+%2A",
+    "headers": {
+      "content-type": "text/plain",
+      "accept": ""
+    },
+    "body": ""
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=fixture-key&deviceIds=phone&icon=https%3A%2F%2Fexample.test%2Ficon&text=hi+%2A&title=Release+%2A",
+    "headers": {
+      "accept": "",
+      "content-type": "text/plain"
+    },
+    "body": "",
+    "outcome": "success"
+  }
+}

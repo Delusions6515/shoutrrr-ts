@@ -1,4 +1,4 @@
-// Command go-baseline captures a synthetic Generic Webhook request from pinned Go Shoutrrr.
+// Command go-baseline captures synthetic service requests from pinned Go Shoutrrr.
 // Run from the upstream Go checkout: go run <path-to-this-file> <fixture.json>.
 package main
 
@@ -14,16 +14,23 @@ import (
 
 	"github.com/containrrr/shoutrrr/pkg/services/bark"
 	"github.com/containrrr/shoutrrr/pkg/services/generic"
+	"github.com/containrrr/shoutrrr/pkg/services/gotify"
+	"github.com/containrrr/shoutrrr/pkg/services/join"
+	"github.com/containrrr/shoutrrr/pkg/services/mattermost"
+	"github.com/containrrr/shoutrrr/pkg/services/pushover"
+	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
+	"github.com/containrrr/shoutrrr/pkg/types"
 	"github.com/jarcoal/httpmock"
 )
 
 type fixture struct {
-	Service          string `json:"service"`
-	URL              string `json:"url"`
-	Message          string `json:"message"`
-	ResponseStatus   int    `json:"responseStatus"`
-	ResponseCode     int    `json:"responseCode"`
-	TransportFailure bool   `json:"transportFailure"`
+	Service          string            `json:"service"`
+	Params           map[string]string `json:"params"`
+	URL              string            `json:"url"`
+	Message          string            `json:"message"`
+	ResponseStatus   int               `json:"responseStatus"`
+	ResponseCode     int               `json:"responseCode"`
+	TransportFailure bool              `json:"transportFailure"`
 }
 type observation struct {
 	Method  string            `json:"method"`
@@ -46,21 +53,31 @@ func main() {
 		log.Fatal(err)
 	}
 	parsed, err := url.Parse(input.URL)
-	if err != nil || !strings.HasSuffix(parsed.Hostname(), ".example.test") ||
+	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join")) ||
 		((input.Service == "bark" && parsed.Scheme != "bark") ||
-			(input.Service != "bark" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
-		log.Fatal("only synthetic Generic and Bark fixtures are accepted")
+			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
+			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
+			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
+			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
+			(input.Service == "join" && parsed.Scheme != "join") ||
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	var captured *observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
-		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") {
+		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
-		payload, err := io.ReadAll(req.Body)
-		if err != nil {
-			return nil, err
+		var payload []byte
+		if req.Body != nil {
+			var err error
+			payload, err = io.ReadAll(req.Body)
+			if err != nil {
+				return nil, err
+			}
 		}
 		var body any = string(payload)
 		if json.Valid(payload) {
@@ -78,6 +95,12 @@ func main() {
 		if status == 0 {
 			status = 200
 		}
+		if input.Service == "gotify" {
+			if status >= 300 {
+				return httpmock.NewStringResponse(status, `{"error":"synthetic","errorCode":503,"errorDescription":"unavailable"}`), nil
+			}
+			return httpmock.NewStringResponse(status, `{"id":1,"appid":1,"message":"ok","title":"ok","priority":0}`), nil
+		}
 		if input.Service == "bark" {
 			code := input.ResponseCode
 			if code == 0 {
@@ -87,12 +110,48 @@ func main() {
 		}
 		return httpmock.NewStringResponse(status, "synthetic response"), nil
 	})
-	if input.Service == "bark" {
+	var params *types.Params
+	if input.Params != nil {
+		value := types.Params(input.Params)
+		params = &value
+	}
+	if input.Service == "pushover" {
+		service := &pushover.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "join" {
+		service := &join.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "rocketchat" {
+		service := &rocketchat.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "mattermost" {
+		service := &mattermost.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "gotify" {
+		service := &gotify.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		httpmock.ActivateNonDefault(service.GetHTTPClient())
+		err = service.Send(input.Message, params)
+	} else if input.Service == "bark" {
 		service := &bark.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")
 		}
-		err = service.Send(input.Message, nil)
+		err = service.Send(input.Message, params)
 	} else {
 		service := &generic.Service{}
 		if strings.HasPrefix(parsed.Scheme, "generic+") {
@@ -104,7 +163,7 @@ func main() {
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")
 		}
-		err = service.Send(input.Message, nil)
+		err = service.Send(input.Message, params)
 	}
 	if captured == nil {
 		log.Fatal("no request captured")

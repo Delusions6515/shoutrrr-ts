@@ -1,0 +1,38 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/rocketchat/rocketchat_json.go: CreateJSONPayload",
+  "case": "rocketchat-user-channel-overrides",
+  "service": "rocketchat",
+  "url": "rocketchat://bot@push.example.test:2225/fixture-a/fixture-b/room",
+  "message": "hello",
+  "params": {
+    "username": "sender",
+    "channel": "#override"
+  },
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test:2225/hooks/fixture-a/fixture-b",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello",
+      "username": "sender",
+      "channel": "#override"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test:2225/hooks/fixture-a/fixture-b",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "channel": "#override",
+      "text": "hello",
+      "username": "sender"
+    },
+    "outcome": "success"
+  }
+}

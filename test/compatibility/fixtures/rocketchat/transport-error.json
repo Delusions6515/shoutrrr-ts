@@ -1,0 +1,31 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/rocketchat/rocketchat.go: Send",
+  "case": "rocketchat-transport-failure",
+  "service": "rocketchat",
+  "url": "rocketchat://push.example.test/fixture-a/fixture-b",
+  "message": "hello",
+  "transportFailure": true,
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test/hooks/fixture-a/fixture-b",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test/hooks/fixture-a/fixture-b",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello"
+    },
+    "outcome": "transport-error"
+  }
+}

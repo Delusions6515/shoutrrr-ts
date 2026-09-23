@@ -1,0 +1,31 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/mattermost/mattermost.go: Send",
+  "case": "mattermost-transport-failure",
+  "service": "mattermost",
+  "url": "mattermost://push.example.test/fixture-hook",
+  "message": "hello",
+  "transportFailure": true,
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test/hooks/fixture-hook",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test/hooks/fixture-hook",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello"
+    },
+    "outcome": "transport-error"
+  }
+}

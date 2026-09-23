@@ -17,6 +17,21 @@ importers:
       '@shoutrrr-ts/generic-internal':
         specifier: workspace:*
         version: link:packages/generic
+      '@shoutrrr-ts/gotify-internal':
+        specifier: workspace:*
+        version: link:packages/gotify
+      '@shoutrrr-ts/join-internal':
+        specifier: workspace:*
+        version: link:packages/join
+      '@shoutrrr-ts/mattermost-internal':
+        specifier: workspace:*
+        version: link:packages/mattermost
+      '@shoutrrr-ts/pushover-internal':
+        specifier: workspace:*
+        version: link:packages/pushover
+      '@shoutrrr-ts/rocketchat-internal':
+        specifier: workspace:*
+        version: link:packages/rocketchat
       '@types/node':
         specifier: ^22.0.0
         version: 22.20.4
@@ -39,6 +54,36 @@ importers:
   packages/core: {}
 
   packages/generic:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/gotify:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/join:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/mattermost:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/pushover:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/rocketchat:
     dependencies:
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*

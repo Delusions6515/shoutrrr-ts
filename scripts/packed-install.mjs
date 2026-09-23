@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -32,7 +32,25 @@ try {
     dependencies: { "shoutrrr-ts": `file:${archive}` },
   }));
   await execFileAsync("pnpm", ["install", "--frozen-lockfile=false", "--ignore-scripts"], { cwd: consumer });
-  await execFileAsync("node", ["--input-type=module", "--eval", "import { send, createSender, sendDetailed } from 'shoutrrr-ts'; if (typeof send !== 'function' || typeof createSender !== 'function' || typeof sendDetailed !== 'function') process.exit(1);"], { cwd: consumer });
+  const manifest = JSON.parse(await readFile(join(root, "test/compatibility/services.json"), "utf8"));
+  const stable = await Promise.all(Object.entries(manifest.services)
+    .filter(([, value]) => value.status === "stable")
+    .map(async ([name, value]) => ({
+      name,
+      url: JSON.parse(await readFile(join(root, `test/compatibility/fixtures/${name}/${value.fixtures[0]}.json`), "utf8")).url,
+    })));
+  const smoke = `
+    import { send, createSender, sendDetailed } from 'shoutrrr-ts';
+    if (typeof send !== 'function' || typeof createSender !== 'function' || typeof sendDetailed !== 'function') process.exit(1);
+    const stable = ${JSON.stringify(stable)};
+    let count = 0;
+    globalThis.fetch = async () => { count++; return new Response('{"code":200,"id":1,"message":"ok"}', {status:200}); };
+    for (const entry of stable) await send(entry.url, 'packed smoke');
+    if (count !== stable.length) process.exit(2);
+    try { await send('slack://token@example.test', 'unsupported'); process.exit(3); }
+    catch (error) { if (!String(error.message).includes('not supported')) process.exit(4); }
+  `;
+  await execFileAsync("node", ["--input-type=module", "--eval", smoke], { cwd: consumer });
   console.log(`Packed install verified: ${basename(archive)}`);
 } finally {
   await rm(work, { recursive: true, force: true });

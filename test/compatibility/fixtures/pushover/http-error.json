@@ -1,0 +1,27 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/pushover/pushover.go: sendToDevice",
+  "case": "pushover-http-error",
+  "service": "pushover",
+  "url": "pushover://Token:fixture-key@fixture-user.example.test",
+  "message": "hello",
+  "responseStatus": 503,
+  "request": {
+    "method": "POST",
+    "url": "https://api.pushover.net/1/messages.json",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "accept": ""
+    },
+    "body": "device=&message=hello&priority=0&token=fixture-key&user=fixture-user.example.test"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.pushover.net/1/messages.json",
+    "headers": {
+      "accept": "",
+      "content-type": "application/x-www-form-urlencoded"
+    },
+    "body": "device=&message=hello&priority=0&token=fixture-key&user=fixture-user.example.test",
+    "outcome": "http-status-503"
+  }
+}
