@@ -6,10 +6,11 @@ jobs:
     strategy:
       matrix: { node: [22, 24] }
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with: { version: latest }
-      - uses: actions/setup-node@v4
-        with: { node-version: ${{ matrix.node }}, cache: pnpm }
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v3
+        with:
+          version: 12
+          runtime: node@${{ matrix.node }}
+          cache: true
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
