@@ -10,7 +10,7 @@
   "types": "./dist/index.d.ts",
   "files": ["dist", "README.md", "LICENSE", "LICENSES", "THIRD_PARTY_NOTICES.md", "COMPATIBILITY.md"],
   "scripts": {
-    "build": "tsdown && node scripts/finalize-build.mjs",
+    "build": "tsdown",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
