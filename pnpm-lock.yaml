@@ -23,12 +23,18 @@ importers:
       '@shoutrrr-ts/gotify-internal':
         specifier: workspace:*
         version: link:packages/gotify
+      '@shoutrrr-ts/ifttt-internal':
+        specifier: workspace:*
+        version: link:packages/ifttt
       '@shoutrrr-ts/join-internal':
         specifier: workspace:*
         version: link:packages/join
       '@shoutrrr-ts/mattermost-internal':
         specifier: workspace:*
         version: link:packages/mattermost
+      '@shoutrrr-ts/ntfy-internal':
+        specifier: workspace:*
+        version: link:packages/ntfy
       '@shoutrrr-ts/pushbullet-internal':
         specifier: workspace:*
         version: link:packages/pushbullet
@@ -80,6 +86,12 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/ifttt:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
   packages/join:
     dependencies:
       '@shoutrrr-ts/core-internal':
@@ -87,6 +99,12 @@ importers:
         version: link:../core
 
   packages/mattermost:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/ntfy:
     dependencies:
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*

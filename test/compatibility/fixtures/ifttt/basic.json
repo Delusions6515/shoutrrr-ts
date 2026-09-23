@@ -1,0 +1,34 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/ifttt/ifttt.go: Send",
+  "case": "ifttt-one-event",
+  "service": "ifttt",
+  "url": "ifttt://fixture-key.example.test?events=deploy",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://maker.ifttt.com/trigger/deploy/with/key/fixture-key.example.test",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "value1": "",
+      "value2": "hello",
+      "value3": ""
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://maker.ifttt.com/trigger/deploy/with/key/fixture-key.example.test",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "value1": "",
+      "value2": "hello",
+      "value3": ""
+    },
+    "outcome": "success"
+  }
+}

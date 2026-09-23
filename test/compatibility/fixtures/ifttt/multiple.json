@@ -1,0 +1,93 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/ifttt/ifttt.go: Send",
+  "case": "ifttt-ordered-events",
+  "service": "ifttt",
+  "captureAll": true,
+  "url": "ifttt://fixture-key.example.test?events=deploy%2Cbackup&value1=source&messagevalue=3&titlevalue=1&title=Hi",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://maker.ifttt.com/trigger/backup/with/key/fixture-key.example.test",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "value1": "source",
+      "value2": "",
+      "value3": "hello"
+    }
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "url": "https://maker.ifttt.com/trigger/deploy/with/key/fixture-key.example.test",
+      "headers": {
+        "content-type": "application/json",
+        "accept": ""
+      },
+      "body": {
+        "value1": "source",
+        "value2": "",
+        "value3": "hello"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://maker.ifttt.com/trigger/backup/with/key/fixture-key.example.test",
+      "headers": {
+        "content-type": "application/json",
+        "accept": ""
+      },
+      "body": {
+        "value1": "source",
+        "value2": "",
+        "value3": "hello"
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "POST",
+    "url": "https://maker.ifttt.com/trigger/backup/with/key/fixture-key.example.test",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "value1": "source",
+      "value2": "",
+      "value3": "hello"
+    },
+    "outcome": "success",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://maker.ifttt.com/trigger/deploy/with/key/fixture-key.example.test",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "value1": "source",
+          "value2": "",
+          "value3": "hello"
+        },
+        "outcome": "success"
+      },
+      {
+        "method": "POST",
+        "url": "https://maker.ifttt.com/trigger/backup/with/key/fixture-key.example.test",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "value1": "source",
+          "value2": "",
+          "value3": "hello"
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

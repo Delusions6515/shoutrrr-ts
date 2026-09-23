@@ -1,0 +1,42 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/ntfy/ntfy.go: sendAPI",
+  "case": "ntfy-headers-and-http",
+  "service": "ntfy",
+  "url": "ntfy://push.example.test/topic?scheme=http&priority=urgent&tags=a%2Cb&actions=view%3Bopen&cache=no&firebase=no&markdown=yes&title=Hi",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "http://push.example.test/topic",
+    "headers": {
+      "content-type": "",
+      "accept": "",
+      "user-agent": "shoutrrr/0.6-dev",
+      "priority": "Max",
+      "tags": "a,b",
+      "actions": "view;open",
+      "cache": "no",
+      "firebase": "no",
+      "markdown": "yes",
+      "title": "Hi"
+    },
+    "body": "hello"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "http://push.example.test/topic",
+    "headers": {
+      "accept": "",
+      "actions": "view;open",
+      "cache": "no",
+      "content-type": "",
+      "firebase": "no",
+      "markdown": "yes",
+      "priority": "Max",
+      "tags": "a,b",
+      "title": "Hi",
+      "user-agent": "shoutrrr/0.6-dev"
+    },
+    "body": "hello",
+    "outcome": "success"
+  }
+}

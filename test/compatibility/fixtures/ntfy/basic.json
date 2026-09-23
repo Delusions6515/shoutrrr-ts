@@ -1,0 +1,30 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/ntfy/ntfy.go: sendAPI",
+  "case": "ntfy-default",
+  "service": "ntfy",
+  "url": "ntfy://push.example.test/topic",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test/topic",
+    "headers": {
+      "content-type": "",
+      "accept": "",
+      "user-agent": "shoutrrr/0.6-dev",
+      "priority": "Default"
+    },
+    "body": "hello"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test/topic",
+    "headers": {
+      "accept": "",
+      "content-type": "",
+      "priority": "Default",
+      "user-agent": "shoutrrr/0.6-dev"
+    },
+    "body": "hello",
+    "outcome": "success"
+  }
+}

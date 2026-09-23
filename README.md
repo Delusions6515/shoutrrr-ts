@@ -18,8 +18,10 @@ Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, m
 | Bark | Stable against Go `ccf8139` local tests | `bark://:device-key@push.example.test` |
 | Gotify | Stable against Go `ccf8139` local tests | `gotify://push.example.test/app-token` |
 | Google Chat | Stable against Go `ccf8139` local tests | `googlechat://chat.example.test/hook?key=fixture-key&token=fixture-token` (`hangouts://` alias) |
+| IFTTT | Stable against Go `ccf8139` local tests | `ifttt://fixture-key.example.test?events=deploy` |
 | Join | Stable against Go `ccf8139` local tests | `join://Token:api-key@join?devices=phone` |
 | Mattermost | Stable against Go `ccf8139` local tests | `mattermost://push.example.test/webhook-token` |
+| ntfy | Stable against Go `ccf8139` local tests | `ntfy://push.example.test/topic` |
 | Pushover | Stable against Go `ccf8139` local tests | `pushover://Token:api-key@user.example.test` |
 | Pushbullet | Stable against Go `ccf8139` local tests | `pushbullet://AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/device-id` |
 | Rocket.Chat | Stable against Go `ccf8139` local tests | `rocketchat://push.example.test/token-a/token-b` |
@@ -33,7 +35,7 @@ Webhook URLs are trusted, privileged configuration. Do not pass attacker-control
 
 ## Compatibility and licensing
 
-The ten services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
+The twelve services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 This distribution is licensed under AGPL-3.0-only. It includes adapted MIT-licensed woodpecker source and its notice in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). This project is not affiliated with Shoutrrr or woodpecker.
 

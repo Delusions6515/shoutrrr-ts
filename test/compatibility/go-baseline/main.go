@@ -16,8 +16,10 @@ import (
 	"github.com/containrrr/shoutrrr/pkg/services/generic"
 	"github.com/containrrr/shoutrrr/pkg/services/googlechat"
 	"github.com/containrrr/shoutrrr/pkg/services/gotify"
+	"github.com/containrrr/shoutrrr/pkg/services/ifttt"
 	"github.com/containrrr/shoutrrr/pkg/services/join"
 	"github.com/containrrr/shoutrrr/pkg/services/mattermost"
+	"github.com/containrrr/shoutrrr/pkg/services/ntfy"
 	"github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
@@ -63,12 +65,14 @@ func main() {
 			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
 			(input.Service == "googlechat" && parsed.Scheme != "googlechat" && parsed.Scheme != "hangouts") ||
 			(input.Service == "zulip" && parsed.Scheme != "zulip") ||
+			(input.Service == "ntfy" && parsed.Scheme != "ntfy") ||
+			(input.Service == "ifttt" && parsed.Scheme != "ifttt") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -77,7 +81,7 @@ func main() {
 	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -103,6 +107,13 @@ func main() {
 		if input.Service == "zulip" {
 			captured.Headers["authorization"] = req.Header.Get("Authorization")
 		}
+		if input.Service == "ntfy" {
+			for _, key := range []string{"User-Agent", "Priority", "Title", "Tags", "Delay", "Actions", "Click", "Attach", "X-Icon", "Filename", "Email", "Cache", "Firebase", "Markdown", "Authorization"} {
+				if value := req.Header.Get(key); value != "" {
+					captured.Headers[strings.ToLower(key)] = value
+				}
+			}
+		}
 		requests = append(requests, *captured)
 		if input.TransportFailure {
 			return nil, fmt.Errorf("synthetic transport failure")
@@ -110,6 +121,12 @@ func main() {
 		status := input.ResponseStatus
 		if status == 0 {
 			status = 200
+		}
+		if input.Service == "ntfy" {
+			if status >= 300 {
+				return httpmock.NewStringResponse(status, `{"code":503,"error":"synthetic"}`), nil
+			}
+			return httpmock.NewStringResponse(status, `{}`), nil
 		}
 		if input.Service == "pushbullet" {
 			if status >= 300 {
@@ -137,7 +154,29 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "zulip" {
+	if input.Service == "ifttt" {
+		service := &ifttt.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		// Pinned Go prints the entire payload to stdout. Discard that unsafe output;
+		// only synthetic request observations are emitted by the harness.
+		old := os.Stdout
+		devNull, openErr := os.OpenFile(os.DevNull, os.O_WRONLY, 0)
+		if openErr != nil {
+			log.Fatal("cannot suppress upstream payload logging")
+		}
+		os.Stdout = devNull
+		err = service.Send(input.Message, params)
+		os.Stdout = old
+		_ = devNull.Close()
+	} else if input.Service == "ntfy" {
+		service := &ntfy.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "zulip" {
 		service := &zulip.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")

@@ -33,7 +33,7 @@ try {
   run("go", ["mod", "download", `-modfile=${modfile}`, `github.com/AdaLogics/go-fuzz-headers@${version}`], upstream);
   let count = 0;
   for (const service of (await readdir(fixturesRoot)).sort()) {
-    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join", "googlechat", "pushbullet", "zulip"].includes(service)) continue;
+    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join", "googlechat", "pushbullet", "zulip", "ntfy", "ifttt"].includes(service)) continue;
     for (const name of (await readdir(join(fixturesRoot, service))).filter((file) => file.endsWith(".json")).sort()) {
     const path = join(fixturesRoot, service, name);
     const fixture = JSON.parse(await readFile(path, "utf8"));
