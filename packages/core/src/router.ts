@@ -46,7 +46,7 @@ export class ServiceRouter {
       throw new Error(`unknown service ${JSON.stringify(scheme)}`);
     }
     const service = factory();
-    service.initialize(new URL(rawURL), this.logger);
+    service.initialize(new URL(rawURL), this.logger, rawURL);
     return service;
   }
 

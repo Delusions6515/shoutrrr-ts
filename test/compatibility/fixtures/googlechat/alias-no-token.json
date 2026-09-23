@@ -1,0 +1,31 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/googlechat/googlechat_config.go: setURL; pkg/router/servicemap.go: hangouts",
+  "case": "hangouts-alias-and-optional-token-in-pinned-go",
+  "service": "googlechat",
+  "url": "hangouts://chat.example.test/hook?key=fixture-key",
+  "message": "hello",
+  "responseStatus": 204,
+  "request": {
+    "method": "POST",
+    "url": "https://chat.example.test/hook?key=fixture-key&token=",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://chat.example.test/hook?key=fixture-key&token=",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello"
+    },
+    "outcome": "success"
+  }
+}

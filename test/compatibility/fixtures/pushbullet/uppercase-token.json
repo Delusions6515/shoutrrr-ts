@@ -1,0 +1,42 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/pushbullet/pushbullet_config.go: setURL",
+  "case": "pushbullet-preserves-case-sensitive-token",
+  "service": "pushbullet",
+  "url": "pushbullet://AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/device1",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://api.pushbullet.com/v2/pushes",
+    "headers": {
+      "content-type": "application/json",
+      "accept": "",
+      "access-token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "body": {
+      "type": "note",
+      "title": "",
+      "body": "hello",
+      "email": "",
+      "channel_tag": "",
+      "device_iden": "device1"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.pushbullet.com/v2/pushes",
+    "headers": {
+      "accept": "",
+      "access-token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "content-type": "application/json"
+    },
+    "body": {
+      "body": "hello",
+      "channel_tag": "",
+      "device_iden": "device1",
+      "email": "",
+      "title": "",
+      "type": "note"
+    },
+    "outcome": "success"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/googlechat/googlechat.go: Send",
+  "case": "googlechat-http-error",
+  "service": "googlechat",
+  "url": "googlechat://chat.example.test/hook?key=fixture-key&token=fixture-token",
+  "message": "hello",
+  "responseStatus": 503,
+  "request": {
+    "method": "POST",
+    "url": "https://chat.example.test/hook?key=fixture-key&token=fixture-token",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://chat.example.test/hook?key=fixture-key&token=fixture-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello"
+    },
+    "outcome": "http-status-503"
+  }
+}

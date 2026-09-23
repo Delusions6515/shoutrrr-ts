@@ -33,7 +33,7 @@ try {
   run("go", ["mod", "download", `-modfile=${modfile}`, `github.com/AdaLogics/go-fuzz-headers@${version}`], upstream);
   let count = 0;
   for (const service of (await readdir(fixturesRoot)).sort()) {
-    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join"].includes(service)) continue;
+    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join", "googlechat", "pushbullet", "zulip"].includes(service)) continue;
     for (const name of (await readdir(join(fixturesRoot, service))).filter((file) => file.endsWith(".json")).sort()) {
     const path = join(fixturesRoot, service, name);
     const fixture = JSON.parse(await readFile(path, "utf8"));
@@ -44,6 +44,10 @@ try {
       await writeFile(path, `${JSON.stringify(fixture, null, 2)}\n`);
     } else if (!isDeepStrictEqual(observed, fixture.goObserved)) {
       throw new Error(`Go observation differs from committed fixture ${name}`);
+    }
+    if (fixture.captureAll && !isDeepStrictEqual(observed.requests?.map(
+      ({ method, url, headers, body }) => ({ method, url, headers, body })), fixture.requests)) {
+      throw new Error(`Go request sequence differs from TypeScript expectation in ${name}`);
     }
     if (!isDeepStrictEqual(observed.method, fixture.request.method) ||
         !isDeepStrictEqual(observed.url, fixture.request.url) ||

@@ -52,6 +52,10 @@ for (const [service, info] of Object.entries(services)) {
         throw new Error(`${file} request differs from its recorded Go observation`);
       }
     }
+    if (fixture.captureAll && !isDeepStrictEqual(fixture.goObserved.requests?.map(
+      ({ method, url, headers, body }) => ({ method, url, headers, body })), fixture.requests)) {
+      throw new Error(`${file} request sequence differs from its recorded Go observation`);
+    }
     const expectedOutcome = fixture.transportFailure ? "transport-error" :
       fixture.responseStatus >= 300 ? `http-status-${fixture.responseStatus}` :
       fixture.responseCode && fixture.responseCode !== 200 ? `api-code-${fixture.responseCode}` : "success";
@@ -59,7 +63,7 @@ for (const [service, info] of Object.entries(services)) {
       throw new Error(`${file} lacks the expected Go outcome`);
     }
     const host = new URL(fixture.request.url).hostname;
-    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net" };
+    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net", pushbullet: "api.pushbullet.com" };
     if (!host.endsWith(".example.test") && host !== fixedHosts[service]) {
       throw new Error(`${file} must use a synthetic host or its upstream fixed endpoint`);
     }

@@ -1,0 +1,30 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/googlechat/googlechat.go: Send",
+  "case": "googlechat-default",
+  "service": "googlechat",
+  "url": "googlechat://chat.example.test/v1/spaces/fixture/messages?key=fixture-key&token=fixture-token",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://chat.example.test/v1/spaces/fixture/messages?key=fixture-key&token=fixture-token",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "text": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://chat.example.test/v1/spaces/fixture/messages?key=fixture-key&token=fixture-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello"
+    },
+    "outcome": "success"
+  }
+}

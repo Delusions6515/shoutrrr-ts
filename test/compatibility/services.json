@@ -5,7 +5,7 @@
     "bark": { "status": "stable", "fixtures": ["api-error", "basic", "encoded-path", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "discord": { "status": "pending" },
     "generic": { "status": "stable", "fixtures": ["basic", "go-query-encoding", "reserved-query", "shortcut-raw-query", "server-error", "transport-error"], "livePlatform": "unverified" },
-    "googlechat": { "status": "pending", "aliases": ["hangouts"] },
+    "googlechat": { "status": "stable", "fixtures": ["alias-no-token", "basic", "http-error", "transport-error"], "livePlatform": "unverified", "aliases": ["hangouts"] },
     "gotify": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "ifttt": { "status": "pending" },
     "join": { "status": "stable", "fixtures": ["basic", "http-error", "options"], "livePlatform": "unverified" },
@@ -13,13 +13,13 @@
     "mattermost": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "ntfy": { "status": "pending" },
     "opsgenie": { "status": "pending" },
-    "pushbullet": { "status": "pending" },
+    "pushbullet": { "status": "stable", "fixtures": ["basic", "first-failure", "http-error", "multiple", "uppercase-token"], "livePlatform": "unverified" },
     "pushover": { "status": "stable", "fixtures": ["basic", "http-error", "options"], "livePlatform": "unverified" },
     "rocketchat": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "slack": { "status": "pending" },
     "smtp": { "status": "pending" },
     "teams": { "status": "pending" },
     "telegram": { "status": "pending" },
-    "zulip": { "status": "pending" }
+    "zulip": { "status": "stable", "fixtures": ["basic", "http-error", "no-topic"], "livePlatform": "unverified" }
   }
 }

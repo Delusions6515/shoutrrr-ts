@@ -54,7 +54,7 @@ export interface ServiceSendOptions {
 
 /** Service is the public common interface for all notification services. */
 export interface Service {
-  initialize(u: URL, logger?: Logger): void;
+  initialize(u: URL, logger?: Logger, rawURL?: string): void;
   setLogger(l: Logger): void;
   send(message: string, params?: Params, options?: ServiceSendOptions): Promise<void>;
 }

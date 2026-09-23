@@ -14,11 +14,14 @@ import (
 
 	"github.com/containrrr/shoutrrr/pkg/services/bark"
 	"github.com/containrrr/shoutrrr/pkg/services/generic"
+	"github.com/containrrr/shoutrrr/pkg/services/googlechat"
 	"github.com/containrrr/shoutrrr/pkg/services/gotify"
 	"github.com/containrrr/shoutrrr/pkg/services/join"
 	"github.com/containrrr/shoutrrr/pkg/services/mattermost"
+	"github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
+	"github.com/containrrr/shoutrrr/pkg/services/zulip"
 	"github.com/containrrr/shoutrrr/pkg/types"
 	"github.com/jarcoal/httpmock"
 )
@@ -30,14 +33,16 @@ type fixture struct {
 	Message          string            `json:"message"`
 	ResponseStatus   int               `json:"responseStatus"`
 	ResponseCode     int               `json:"responseCode"`
+	CaptureAll       bool              `json:"captureAll"`
 	TransportFailure bool              `json:"transportFailure"`
 }
 type observation struct {
-	Method  string            `json:"method"`
-	URL     string            `json:"url"`
-	Headers map[string]string `json:"headers"`
-	Body    any               `json:"body"`
-	Outcome string            `json:"outcome"`
+	Method   string            `json:"method"`
+	URL      string            `json:"url"`
+	Headers  map[string]string `json:"headers"`
+	Body     any               `json:"body"`
+	Outcome  string            `json:"outcome"`
+	Requests []observation     `json:"requests,omitempty"`
 }
 
 func main() {
@@ -53,22 +58,26 @@ func main() {
 		log.Fatal(err)
 	}
 	parsed, err := url.Parse(input.URL)
-	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join")) ||
+	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
 		((input.Service == "bark" && parsed.Scheme != "bark") ||
 			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
+			(input.Service == "googlechat" && parsed.Scheme != "googlechat" && parsed.Scheme != "hangouts") ||
+			(input.Service == "zulip" && parsed.Scheme != "zulip") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
+			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	var captured *observation
+	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -88,12 +97,25 @@ func main() {
 		captured = &observation{Method: req.Method, URL: req.URL.String(), Headers: map[string]string{
 			"content-type": req.Header.Get("Content-Type"), "accept": req.Header.Get("Accept"),
 		}, Body: body, Outcome: "success"}
+		if input.Service == "pushbullet" {
+			captured.Headers["access-token"] = req.Header.Get("Access-Token")
+		}
+		if input.Service == "zulip" {
+			captured.Headers["authorization"] = req.Header.Get("Authorization")
+		}
+		requests = append(requests, *captured)
 		if input.TransportFailure {
 			return nil, fmt.Errorf("synthetic transport failure")
 		}
 		status := input.ResponseStatus
 		if status == 0 {
 			status = 200
+		}
+		if input.Service == "pushbullet" {
+			if status >= 300 {
+				return httpmock.NewStringResponse(status, `{"error":{"message":"synthetic","type":"invalid","cat":"invalid"}}`), nil
+			}
+			return httpmock.NewStringResponse(status, `{}`), nil
 		}
 		if input.Service == "gotify" {
 			if status >= 300 {
@@ -115,7 +137,25 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "pushover" {
+	if input.Service == "zulip" {
+		service := &zulip.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "pushbullet" {
+		service := &pushbullet.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "googlechat" {
+		service := &googlechat.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "pushover" {
 		service := &pushover.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")
@@ -181,6 +221,9 @@ func main() {
 		}
 	} else if input.TransportFailure || input.ResponseStatus >= 300 || (input.ResponseCode != 0 && input.ResponseCode != 200) {
 		log.Fatal("Go did not reject the injected failure")
+	}
+	if input.CaptureAll {
+		captured.Requests = requests
 	}
 	if err := json.NewEncoder(os.Stdout).Encode(captured); err != nil {
 		log.Fatal(err)

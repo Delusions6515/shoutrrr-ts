@@ -1,0 +1,28 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/zulip/zulip.go: doSend",
+  "case": "zulip-stream-and-topic",
+  "service": "zulip",
+  "url": "zulip://bot%40example.test:fixture-key@chat.example.test?stream=alerts&topic=News",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://bot%40example.test:fixture-key@chat.example.test/api/v1/messages",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "accept": "",
+      "authorization": "Basic Ym90QGV4YW1wbGUudGVzdDpmaXh0dXJlLWtleQ=="
+    },
+    "body": "content=hello&to=alerts&topic=News&type=stream"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://bot%40example.test:fixture-key@chat.example.test/api/v1/messages",
+    "headers": {
+      "accept": "",
+      "authorization": "Basic Ym90QGV4YW1wbGUudGVzdDpmaXh0dXJlLWtleQ==",
+      "content-type": "application/x-www-form-urlencoded"
+    },
+    "body": "content=hello&to=alerts&topic=News&type=stream",
+    "outcome": "success"
+  }
+}
