@@ -40,7 +40,7 @@ function publicError(error: unknown): Error {
   return new Error("notification delivery failed");
 }
 
-/** Sends one message through the stable Generic Webhook service. */
+/** Sends one message through a registered stable service. */
 export async function send(rawURL: string, message: string, options: Pick<SendOptions, "signal"> = {}): Promise<void> {
   try {
     await sendCore(rawURL, message, options);

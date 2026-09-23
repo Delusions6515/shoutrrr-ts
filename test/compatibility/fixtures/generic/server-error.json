@@ -1,8 +1,9 @@
 {
-  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_test.go",
-  "case": "generic-json-payload",
-  "url": "generic://hooks.example.test/notify?template=json&%24context=fixture",
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic.go: doSend",
+  "case": "server-error",
+  "url": "generic://hooks.example.test/notify",
   "message": "hello",
+  "responseStatus": 503,
   "request": {
     "method": "POST",
     "url": "https://hooks.example.test/notify",
@@ -10,10 +11,7 @@
       "content-type": "application/json",
       "accept": "application/json"
     },
-    "body": {
-      "message": "hello",
-      "context": "fixture"
-    }
+    "body": "hello"
   },
   "goObserved": {
     "method": "POST",
@@ -22,10 +20,7 @@
       "accept": "application/json",
       "content-type": "application/json"
     },
-    "body": {
-      "context": "fixture",
-      "message": "hello"
-    },
-    "outcome": "success"
+    "body": "hello",
+    "outcome": "http-status-503"
   }
 }

@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@shoutrrr-ts/bark-internal':
+        specifier: workspace:*
+        version: link:packages/bark
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*
         version: link:packages/core
@@ -26,6 +29,12 @@ importers:
       vitest:
         specifier: ^5.0.1
         version: 5.0.1(@types/node@22.20.4)(vite@7.3.6(@types/node@22.20.4)(jiti@2.7.0))
+
+  packages/bark:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
 
   packages/core: {}
 

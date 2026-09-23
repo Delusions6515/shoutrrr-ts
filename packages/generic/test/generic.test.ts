@@ -79,7 +79,7 @@ describe("the Generic service", () => {
       );
     });
 
-    it("should preserve the raw query bytes of a Generic shortcut", () => {
+    it("should preserve raw query bytes in ConfigFromWebhookURL before router conversion", () => {
       const { config } = testCustomURL(
         "https://example.com/?signature=~*%2a&space=a%20b&space=a+b",
       );

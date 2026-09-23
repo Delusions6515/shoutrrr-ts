@@ -1,7 +1,7 @@
 {
   "name": "shoutrrr-ts",
   "version": "0.1.0",
-  "description": "Node.js compatibility package for Shoutrrr Generic Webhook URLs",
+  "description": "Node.js compatibility package for verified Shoutrrr notification URLs",
   "type": "module",
   "license": "AGPL-3.0-only",
   "repository": { "type": "git", "url": "https://github.com/Delusions6515/shoutrrr-ts.git" },
@@ -17,10 +17,12 @@
     "check": "pnpm typecheck && pnpm test && pnpm build && pnpm verify:provenance && pnpm verify:compatibility && pnpm pack:check",
     "verify:provenance": "node scripts/verify-provenance.mjs",
     "verify:compatibility": "node scripts/verify-compatibility-fixtures.mjs",
+    "verify:go-baseline": "node scripts/verify-go-baseline.mjs",
     "verify:package": "node scripts/verify-package.mjs",
     "pack:check": "node scripts/packed-install.mjs"
   },
   "devDependencies": {
+    "@shoutrrr-ts/bark-internal": "workspace:*",
     "@shoutrrr-ts/core-internal": "workspace:*",
     "@shoutrrr-ts/generic-internal": "workspace:*",
     "@types/node": "^22.0.0",

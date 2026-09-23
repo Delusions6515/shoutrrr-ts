@@ -6,7 +6,26 @@
   "request": {
     "method": "POST",
     "url": "https://hooks.example.test/notify?template=forwarded",
-    "headers": { "content-type": "application/json", "accept": "application/json" },
-    "body": { "message": "hello", "context": "fixture" }
+    "headers": {
+      "content-type": "application/json",
+      "accept": "application/json"
+    },
+    "body": {
+      "message": "hello",
+      "context": "fixture"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify?template=forwarded",
+    "headers": {
+      "accept": "application/json",
+      "content-type": "application/json"
+    },
+    "body": {
+      "context": "fixture",
+      "message": "hello"
+    },
+    "outcome": "success"
   }
 }

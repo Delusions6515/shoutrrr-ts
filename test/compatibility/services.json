@@ -1,0 +1,25 @@
+{
+  "upstreamRevision": "ccf81390b700948f85ce1c79f6de9ee75c68d9e5",
+  "goBaselineCommand": "pnpm verify:go-baseline",
+  "services": {
+    "bark": { "status": "stable", "fixtures": ["api-error", "basic", "encoded-path", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
+    "discord": { "status": "pending" },
+    "generic": { "status": "stable", "fixtures": ["basic", "go-query-encoding", "reserved-query", "shortcut-raw-query", "server-error", "transport-error"], "livePlatform": "unverified" },
+    "googlechat": { "status": "pending", "aliases": ["hangouts"] },
+    "gotify": { "status": "pending" },
+    "ifttt": { "status": "pending" },
+    "join": { "status": "pending" },
+    "matrix": { "status": "pending" },
+    "mattermost": { "status": "pending" },
+    "ntfy": { "status": "pending" },
+    "opsgenie": { "status": "pending" },
+    "pushbullet": { "status": "pending" },
+    "pushover": { "status": "pending" },
+    "rocketchat": { "status": "pending" },
+    "slack": { "status": "pending" },
+    "smtp": { "status": "pending" },
+    "teams": { "status": "pending" },
+    "telegram": { "status": "pending" },
+    "zulip": { "status": "pending" }
+  }
+}

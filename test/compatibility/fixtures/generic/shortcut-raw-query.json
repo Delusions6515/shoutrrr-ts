@@ -1,12 +1,25 @@
 {
-  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_config.go: ConfigFromWebhookURL",
-  "case": "shortcut-preserves-raw-query",
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/generic/generic_config.go: GetConfigURLFromCustom and setURL",
+  "case": "shortcut-normalizes-query-through-router",
   "url": "generic+https://hooks.example.test/notify?signature=~*%2a&space=a%20b&space=a+b",
   "message": "hello",
   "request": {
     "method": "POST",
-    "url": "https://hooks.example.test/notify?signature=~*%2a&space=a%20b&space=a+b",
-    "headers": { "content-type": "application/json", "accept": "application/json" },
+    "url": "https://hooks.example.test/notify?signature=~%2A%2A&space=a+b&space=a+b",
+    "headers": {
+      "content-type": "application/json",
+      "accept": "application/json"
+    },
     "body": "hello"
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://hooks.example.test/notify?signature=~%2A%2A&space=a+b&space=a+b",
+    "headers": {
+      "accept": "application/json",
+      "content-type": "application/json"
+    },
+    "body": "hello",
+    "outcome": "success"
   }
 }

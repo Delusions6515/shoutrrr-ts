@@ -1,0 +1,37 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/bark/bark.go: sendAPI",
+  "case": "bark-application-error",
+  "service": "bark",
+  "url": "bark://:fixture-device@push.example.test",
+  "message": "hello",
+  "responseCode": 400,
+  "request": {
+    "method": "POST",
+    "url": "https://push.example.test/push",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "body": "hello",
+      "device_key": "fixture-device",
+      "title": "",
+      "badge": 0
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://push.example.test/push",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "badge": 0,
+      "body": "hello",
+      "device_key": "fixture-device",
+      "title": ""
+    },
+    "outcome": "api-code-400"
+  }
+}

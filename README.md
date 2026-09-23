@@ -1,6 +1,6 @@
 # shoutrrr-ts
 
-A Node.js ESM package for the [Shoutrrr](https://github.com/containrrr/shoutrrr) **Generic Webhook** URL format. It supports Node.js 22 and 24.
+A Node.js ESM package for verified [Shoutrrr](https://github.com/containrrr/shoutrrr) notification URLs. It supports Node.js 22 and 24.
 
 ```ts
 import { send } from "shoutrrr-ts";
@@ -15,6 +15,7 @@ Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, m
 | Service | Status | URL forms |
 | --- | --- | --- |
 | Generic Webhook | Stable | `generic://`, `generic+https://`, `generic+http://` |
+| Bark | Stable against Go `ccf8139` local tests | `bark://:device-key@push.example.test` |
 
 ## Security
 
@@ -24,7 +25,7 @@ Webhook URLs are trusted, privileged configuration. Do not pass attacker-control
 
 ## Compatibility and licensing
 
-Only Generic Webhook is stable. Other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
+Generic Webhook and Bark are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 This distribution is licensed under AGPL-3.0-only. It includes adapted MIT-licensed woodpecker source and its notice in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). This project is not affiliated with Shoutrrr or woodpecker.
 

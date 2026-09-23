@@ -131,8 +131,13 @@ export class GenericService implements Service {
     if (url.protocol.toLowerCase().startsWith(`${Scheme}+`)) {
       const rawWebhookURL = url.href.replace(new RegExp(`^${Scheme}\\+`, "i"), "");
       const { config, pkr } = configFromWebhookURL(rawWebhookURL);
-      this.config = config;
-      this.pkr = pkr;
+      // Go's router converts a custom URL to a service URL and initializes it again.
+      // That round-trip normalizes the query with Go's url.Values encoding.
+      const serviceURL = config.getURLWith(pkr);
+      const defaults = defaultConfig();
+      defaults.config.setURLWith(defaults.pkr, serviceURL);
+      this.config = defaults.config;
+      this.pkr = defaults.pkr;
     } else {
       const { config, pkr } = defaultConfig();
       this.config = config;

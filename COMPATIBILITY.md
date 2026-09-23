@@ -1,11 +1,13 @@
 # Compatibility
 
-`shoutrrr-ts` currently supports **Generic Webhook** URLs only. Go Shoutrrr commit `ccf8139` is the behavioral authority. The implementation was bootstrapped from the woodpecker snapshot recorded in `THIRD_PARTY_NOTICES.md`.
+`shoutrrr-ts` currently supports **Generic Webhook and Bark** URLs (2 of 19 upstream push services). Go Shoutrrr commit `ccf81390b700948f85ce1c79f6de9ee75c68d9e5` is the behavioral authority. The implementation was bootstrapped from the woodpecker snapshot recorded in `THIRD_PARTY_NOTICES.md`. The status of every push service is recorded in `test/compatibility/services.json`; `hangouts` is an alias for Google Chat, not a twentieth service.
 
-Supported forms include `generic://` and `generic+https://` URLs, Generic request options, custom `@Header` values, and `$` JSON fields. Generic defaults to HTTPS. `disabletls=yes` is the explicit HTTP selector; no implicit downgrade occurs.
+Supported Generic forms include `generic://` and `generic+https://` URLs, Generic request options, custom `@Header` values, and `$` JSON fields. Generic defaults to HTTPS. `disabletls=yes` is the explicit HTTP selector; no implicit downgrade occurs. Generic shortcuts normalize query escaping through Go's router conversion (for example, `%20` becomes `+`).
+
+Bark supports `bark://:device-key@host/path?title=...&badge=...` and the upstream query options `scheme`, `sound`, `icon`, `group`, `url`, `category`, and `copy`. Bark defaults to HTTPS and posts JSON to `/push` below the configured path. `scheme=http` permits unencrypted transport, which exposes the device key in the request body. Local tests compare Go-produced request and response outcomes for defaults, options, a non-200 API code, and an HTTP error; they also exercise sender overrides and public error redaction. Live Bark delivery has not been verified.
 
 Node Fetch may add transport headers that differ from Go's HTTP client. These runtime-generated headers are intentionally excluded from service compatibility assertions. Raw webhook URLs are privileged configuration, not untrusted input: parsing does not prevent SSRF, and applications must not accept destinations from attackers.
 
 ## Service promotion gate
 
-A service is public only after URL, request, failure, redaction, Node runtime, and documentation checks pass. Other imported service implementations are not registered or supported.
+A service is public only after URL, request, failure, redaction, Node runtime, and documentation checks pass. Other imported service implementations are not registered or supported. Generic and Bark's recorded Go requests can be rechecked against the pinned Go checkout with `pnpm verify:go-baseline` (set `SHOUTRRR_GO_ROOT` if the checkout is not beside this repository). The pinned Go checkout omits an imported fuzzing module from `go.mod`; the verifier pins it in a temporary modfile without changing upstream. This command is not part of `pnpm check` because clean package consumers do not need Go or an upstream checkout. `pnpm check` validates committed observations and TypeScript behavior; re-run the Go verifier before changing reference fixtures. Local simulation proves agreement with this Go revision, not successful live-provider delivery. Live-platform behavior remains unverified.

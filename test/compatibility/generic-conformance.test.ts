@@ -7,6 +7,9 @@ interface Fixture {
   url: string;
   message: string;
   request: { method: string; url: string; headers: Record<string, string>; body: unknown };
+  responseStatus?: number;
+  transportFailure?: boolean;
+  goObserved: { outcome: string };
 }
 
 describe("Generic Webhook compatibility fixtures", () => {
@@ -17,12 +20,21 @@ describe("Generic Webhook compatibility fixtures", () => {
       .map(async (file) => JSON.parse(await readFile(`${fixtureDirectory}/${file}`, "utf8")) as Fixture));
     const original = globalThis.fetch;
     const captures: Array<{ url: string | URL | Request; init?: RequestInit }> = [];
+    let active: Fixture;
     globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
       captures.push({ url, init });
-      return new Response("ok");
+      if (active.transportFailure) throw new Error("synthetic transport failure");
+      return new Response("synthetic response", { status: active.responseStatus ?? 200 });
     }) as typeof globalThis.fetch;
     try {
-      for (const fixture of fixtures) await send(fixture.url, fixture.message);
+      for (const fixture of fixtures) {
+        active = fixture;
+        if (fixture.goObserved.outcome === "success") {
+          await expect(send(fixture.url, fixture.message)).resolves.toBeUndefined();
+        } else {
+          await expect(send(fixture.url, fixture.message)).rejects.toThrow("notification delivery failed");
+        }
+      }
     } finally {
       globalThis.fetch = original;
     }
