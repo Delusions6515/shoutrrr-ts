@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/containrrr/shoutrrr/pkg/services/bark"
+	"github.com/containrrr/shoutrrr/pkg/services/discord"
 	"github.com/containrrr/shoutrrr/pkg/services/generic"
 	"github.com/containrrr/shoutrrr/pkg/services/googlechat"
 	"github.com/containrrr/shoutrrr/pkg/services/gotify"
@@ -67,6 +68,7 @@ func main() {
 	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "teams" && parsed.Hostname() == "22222222-4444-4444-8444-cccccccccccc") && !(input.Service == "slack" && (parsed.Hostname() == "webhook" || parsed.Hostname() == "C0123456789" || parsed.Hostname() == "AAAAAAAAA")) && !(input.Service == "telegram" && parsed.Hostname() == "telegram") && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
 		((input.Service == "bark" && parsed.Scheme != "bark") ||
 			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
+			(input.Service == "discord" && parsed.Scheme != "discord") ||
 			(input.Service == "googlechat" && parsed.Scheme != "googlechat" && parsed.Scheme != "hangouts") ||
 			(input.Service == "zulip" && parsed.Scheme != "zulip") ||
 			(input.Service == "ntfy" && parsed.Scheme != "ntfy") ||
@@ -80,7 +82,7 @@ func main() {
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "slack" && input.Service != "telegram" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "discord" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "slack" && input.Service != "telegram" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -89,7 +91,7 @@ func main() {
 	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "api.opsgenie.com" && req.URL.Hostname() != "hooks.slack.com" && req.URL.Hostname() != "slack.com" && req.URL.Hostname() != "api.telegram.org" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "api.opsgenie.com" && req.URL.Hostname() != "hooks.slack.com" && req.URL.Hostname() != "slack.com" && req.URL.Hostname() != "api.telegram.org" && req.URL.Hostname() != "discord.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -132,6 +134,9 @@ func main() {
 		status := input.ResponseStatus
 		if status == 0 {
 			status = 200
+			if input.Service == "discord" {
+				status = 204
+			}
 		}
 		if input.Service == "telegram" {
 			if status >= 300 || input.ResponseCode != 0 {
@@ -183,7 +188,13 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "telegram" {
+	if input.Service == "discord" {
+		service := &discord.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "telegram" {
 		service := &telegram.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")
@@ -310,7 +321,7 @@ func main() {
 		switch {
 		case input.TransportFailure:
 			captured.Outcome = "transport-error"
-		case input.ResponseStatus >= 300:
+		case input.ResponseStatus >= 300 || (input.Service == "discord" && input.ResponseStatus != 0 && input.ResponseStatus != 204):
 			captured.Outcome = fmt.Sprintf("http-status-%d", input.ResponseStatus)
 		case input.ResponseCode != 0 && input.ResponseCode != 200:
 			captured.Outcome = fmt.Sprintf("api-code-%d", input.ResponseCode)

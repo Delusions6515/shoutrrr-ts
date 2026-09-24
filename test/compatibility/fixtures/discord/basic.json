@@ -1,0 +1,41 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/discord/discord.go: sendItems",
+  "case": "discord-basic",
+  "service": "discord",
+  "url": "discord://synthetic-token@hook.example.test",
+  "message": "hello",
+  "responseStatus": 204,
+  "request": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "description": "hello",
+          "color": 5298687
+        }
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "color": 5298687,
+          "description": "hello"
+        }
+      ]
+    },
+    "outcome": "success"
+  }
+}

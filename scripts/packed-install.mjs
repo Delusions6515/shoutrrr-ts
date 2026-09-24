@@ -44,10 +44,14 @@ try {
     if (typeof send !== 'function' || typeof createSender !== 'function' || typeof sendDetailed !== 'function') process.exit(1);
     const stable = ${JSON.stringify(stable)};
     let count = 0;
-    globalThis.fetch = async (url) => { count++; return new Response(
-      String(url).includes('slack.com/api/chat.postMessage') ? '{"ok":true}' : '{"code":200,"id":1,"message":"ok"}',
-      {status:200},
-    ); };
+    globalThis.fetch = async (url) => {
+      count++;
+      if (String(url).includes('discord.com/api/webhooks/')) return new Response(null, {status:204});
+      return new Response(
+        String(url).includes('slack.com/api/chat.postMessage') ? '{"ok":true}' : '{"code":200,"id":1,"message":"ok"}',
+        {status:200},
+      );
+    };
     for (const entry of stable) await send(entry.url, 'packed smoke');
     if (count !== stable.length) process.exit(2);
     try { await send('telegram://token@example.test', 'unsupported'); process.exit(3); }

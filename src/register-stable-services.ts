@@ -1,5 +1,6 @@
 import { descriptor as bark } from "@shoutrrr-ts/bark-internal";
 import { registerService } from "@shoutrrr-ts/core-internal";
+import { descriptor as discord } from "@shoutrrr-ts/discord-internal";
 import { descriptor } from "@shoutrrr-ts/generic-internal";
 import { descriptor as gotify } from "@shoutrrr-ts/gotify-internal";
 import { descriptor as googlechat } from "@shoutrrr-ts/googlechat-internal";
@@ -22,6 +23,7 @@ export function registerStableServices(): void {
   if (registered) return;
   for (const scheme of descriptor.schemes) registerService(scheme, descriptor.factory);
   for (const scheme of bark.schemes) registerService(scheme, bark.factory);
+  for (const scheme of discord.schemes) registerService(scheme, discord.factory);
   for (const scheme of gotify.schemes) registerService(scheme, gotify.factory);
   for (const scheme of googlechat.schemes) registerService(scheme, googlechat.factory);
   for (const scheme of ifttt.schemes) registerService(scheme, ifttt.factory);

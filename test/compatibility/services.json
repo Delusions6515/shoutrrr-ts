@@ -3,7 +3,7 @@
   "goBaselineCommand": "pnpm verify:go-baseline",
   "services": {
     "bark": { "status": "stable", "fixtures": ["api-error", "basic", "encoded-path", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
-    "discord": { "status": "pending" },
+    "discord": { "status": "stable", "fixtures": ["basic", "http-error", "multiple", "options", "raw", "thread-escape", "transport-error"], "livePlatform": "unverified" },
     "generic": { "status": "stable", "fixtures": ["basic", "go-query-encoding", "reserved-query", "shortcut-raw-query", "server-error", "transport-error"], "livePlatform": "unverified" },
     "googlechat": { "status": "stable", "fixtures": ["alias-no-token", "basic", "http-error", "transport-error"], "livePlatform": "unverified", "aliases": ["hangouts"] },
     "gotify": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },

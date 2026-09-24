@@ -1,0 +1,31 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/discord/discord.go: Send JSON branch",
+  "case": "discord-raw-json",
+  "service": "discord",
+  "url": "discord://synthetic-token@hook.example.test/raw",
+  "message": "{\"content\":\"hello\"}",
+  "responseStatus": 204,
+  "request": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "content": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "content": "hello"
+    },
+    "outcome": "success"
+  }
+}

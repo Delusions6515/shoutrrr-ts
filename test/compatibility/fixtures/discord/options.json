@@ -1,0 +1,47 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/discord/discord_config.go: SetURL",
+  "case": "discord-options-and-thread",
+  "service": "discord",
+  "url": "discord://synthetic-token@hook.example.test?title=Hi&username=Notifier&avatar=https%3A%2F%2Fimage.example.test%2Fa.png&color=0x112233&thread_id=123&splitLines=No",
+  "message": "hello\nworld",
+  "responseStatus": 204,
+  "request": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token?thread_id=123",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "title": "Hi",
+          "description": "hello\nworld",
+          "color": 1122867
+        }
+      ],
+      "username": "Notifier",
+      "avatar_url": "https://image.example.test/a.png"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token?thread_id=123",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "avatar_url": "https://image.example.test/a.png",
+      "embeds": [
+        {
+          "color": 1122867,
+          "description": "hello\nworld",
+          "title": "Hi"
+        }
+      ],
+      "username": "Notifier"
+    },
+    "outcome": "success"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/discord/discord.go: CreateAPIURLFromConfig",
+  "case": "discord-thread-reserved-query",
+  "service": "discord",
+  "url": "discord://synthetic-token@hook.example.test?thread_id=abc+%26%27%28%29",
+  "message": "hello",
+  "responseStatus": 204,
+  "request": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token?thread_id=abc+%26%27%28%29",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "description": "hello",
+          "color": 5298687
+        }
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token?thread_id=abc+%26%27%28%29",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "color": 5298687,
+          "description": "hello"
+        }
+      ]
+    },
+    "outcome": "success"
+  }
+}

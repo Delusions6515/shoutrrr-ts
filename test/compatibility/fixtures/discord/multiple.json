@@ -1,0 +1,184 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/discord/discord.go: Send batches",
+  "case": "discord-two-batches-first-fails",
+  "service": "discord",
+  "url": "discord://synthetic-token@hook.example.test",
+  "message": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11",
+  "responseStatus": 503,
+  "captureAll": true,
+  "request": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "color": 5298687,
+          "description": "11"
+        }
+      ]
+    }
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "embeds": [
+          {
+            "color": 5298687,
+            "description": "11"
+          },
+          {
+            "color": 5298687,
+            "description": "2"
+          },
+          {
+            "color": 5298687,
+            "description": "3"
+          },
+          {
+            "color": 5298687,
+            "description": "4"
+          },
+          {
+            "color": 5298687,
+            "description": "5"
+          },
+          {
+            "color": 5298687,
+            "description": "6"
+          },
+          {
+            "color": 5298687,
+            "description": "7"
+          },
+          {
+            "color": 5298687,
+            "description": "8"
+          },
+          {
+            "color": 5298687,
+            "description": "9"
+          },
+          {
+            "color": 5298687,
+            "description": "10"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "embeds": [
+          {
+            "color": 5298687,
+            "description": "11"
+          }
+        ]
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "POST",
+    "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "embeds": [
+        {
+          "color": 5298687,
+          "description": "11"
+        }
+      ]
+    },
+    "outcome": "http-status-503",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "embeds": [
+            {
+              "color": 5298687,
+              "description": "11"
+            },
+            {
+              "color": 5298687,
+              "description": "2"
+            },
+            {
+              "color": 5298687,
+              "description": "3"
+            },
+            {
+              "color": 5298687,
+              "description": "4"
+            },
+            {
+              "color": 5298687,
+              "description": "5"
+            },
+            {
+              "color": 5298687,
+              "description": "6"
+            },
+            {
+              "color": 5298687,
+              "description": "7"
+            },
+            {
+              "color": 5298687,
+              "description": "8"
+            },
+            {
+              "color": 5298687,
+              "description": "9"
+            },
+            {
+              "color": 5298687,
+              "description": "10"
+            }
+          ]
+        },
+        "outcome": "success"
+      },
+      {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/hook.example.test/synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "embeds": [
+            {
+              "color": 5298687,
+              "description": "11"
+            }
+          ]
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

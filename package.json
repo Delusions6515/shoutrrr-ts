@@ -24,6 +24,7 @@
   "devDependencies": {
     "@shoutrrr-ts/bark-internal": "workspace:*",
     "@shoutrrr-ts/core-internal": "workspace:*",
+    "@shoutrrr-ts/discord-internal": "workspace:*",
     "@shoutrrr-ts/generic-internal": "workspace:*",
     "@shoutrrr-ts/gotify-internal": "workspace:*",
     "@shoutrrr-ts/googlechat-internal": "workspace:*",
