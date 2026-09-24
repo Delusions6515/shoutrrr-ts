@@ -1,0 +1,135 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/matrix/matrix_client.go: loginPassword, joinRoom",
+  "case": "matrix-login-join-alias",
+  "service": "matrix",
+  "url": "matrix://user:synthetic-password@matrix.example.test?rooms=alerts&deviceID=fixture-device",
+  "message": "hello",
+  "captureAll": true,
+  "request": {
+    "method": "PUT",
+    "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21joined:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-access",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "msgtype": "m.text",
+      "body": "hello"
+    }
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://matrix.example.test/_matrix/client/r0/login",
+      "headers": {
+        "accept": "",
+        "content-type": ""
+      },
+      "body": ""
+    },
+    {
+      "method": "POST",
+      "url": "https://matrix.example.test/_matrix/client/r0/login",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "device_id": "fixture-device",
+        "identifier": {
+          "type": "m.id.user",
+          "user": "user"
+        },
+        "password": "synthetic-password",
+        "type": "m.login.password"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://matrix.example.test/_matrix/client/r0/join/%23alerts?access_token=synthetic-access",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21joined:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-access",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "body": "hello",
+        "msgtype": "m.text"
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "PUT",
+    "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21joined:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-access",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "body": "hello",
+      "msgtype": "m.text"
+    },
+    "outcome": "success",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://matrix.example.test/_matrix/client/r0/login",
+        "headers": {
+          "accept": "",
+          "content-type": ""
+        },
+        "body": "",
+        "outcome": "success"
+      },
+      {
+        "method": "POST",
+        "url": "https://matrix.example.test/_matrix/client/r0/login",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "device_id": "fixture-device",
+          "identifier": {
+            "type": "m.id.user",
+            "user": "user"
+          },
+          "password": "synthetic-password",
+          "type": "m.login.password"
+        },
+        "outcome": "success"
+      },
+      {
+        "method": "POST",
+        "url": "https://matrix.example.test/_matrix/client/r0/join/%23alerts?access_token=synthetic-access",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": null,
+        "outcome": "success"
+      },
+      {
+        "method": "PUT",
+        "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21joined:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-access",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "body": "hello",
+          "msgtype": "m.text"
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

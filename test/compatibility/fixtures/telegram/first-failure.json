@@ -1,0 +1,75 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/telegram/telegram.go: sendMessageForChatIDs",
+  "case": "telegram-first-chat-rejected",
+  "service": "telegram",
+  "url": "telegram://12345:synthetic@telegram?chats=123,456",
+  "message": "hello",
+  "responseStatus": 400,
+  "captureAll": true,
+  "request": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello",
+      "chat_id": "123",
+      "disable_web_page_preview": false,
+      "disable_notification": false,
+      "reply_to_message_id": 0
+    }
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "chat_id": "123",
+        "disable_notification": false,
+        "disable_web_page_preview": false,
+        "reply_to_message_id": 0,
+        "text": "hello"
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "chat_id": "123",
+      "disable_notification": false,
+      "disable_web_page_preview": false,
+      "reply_to_message_id": 0,
+      "text": "hello"
+    },
+    "outcome": "http-status-400",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "chat_id": "123",
+          "disable_notification": false,
+          "disable_web_page_preview": false,
+          "reply_to_message_id": 0,
+          "text": "hello"
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

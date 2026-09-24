@@ -1,0 +1,62 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/matrix/matrix_client.go: sendToExplicitRooms",
+  "case": "matrix-token-explicit-room",
+  "service": "matrix",
+  "url": "matrix://:synthetic-token@matrix.example.test?rooms=!one:matrix.example.test&disableTLS=Yes",
+  "message": "hello",
+  "captureAll": true,
+  "request": {
+    "method": "PUT",
+    "url": "http://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "msgtype": "m.text",
+      "body": "hello"
+    }
+  },
+  "requests": [
+    {
+      "method": "PUT",
+      "url": "http://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "body": "hello",
+        "msgtype": "m.text"
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "PUT",
+    "url": "http://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "body": "hello",
+      "msgtype": "m.text"
+    },
+    "outcome": "success",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "http://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "body": "hello",
+          "msgtype": "m.text"
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/matrix/matrix_client.go: sendToJoinedRooms",
+  "case": "matrix-token-joined-rooms",
+  "service": "matrix",
+  "url": "matrix://:synthetic-token@matrix.example.test",
+  "message": "hello",
+  "captureAll": true,
+  "request": {
+    "method": "PUT",
+    "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21two:matrix.example.test/send/m.room.message/shoutrrr-2?access_token=synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "msgtype": "m.text",
+      "body": "hello"
+    }
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://matrix.example.test/_matrix/client/r0/joined_rooms?access_token=synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": ""
+      },
+      "body": ""
+    },
+    {
+      "method": "PUT",
+      "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "body": "hello",
+        "msgtype": "m.text"
+      }
+    },
+    {
+      "method": "PUT",
+      "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21two:matrix.example.test/send/m.room.message/shoutrrr-2?access_token=synthetic-token",
+      "headers": {
+        "accept": "",
+        "content-type": "application/json"
+      },
+      "body": {
+        "body": "hello",
+        "msgtype": "m.text"
+      }
+    }
+  ],
+  "goObserved": {
+    "method": "PUT",
+    "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21two:matrix.example.test/send/m.room.message/shoutrrr-2?access_token=synthetic-token",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "body": "hello",
+      "msgtype": "m.text"
+    },
+    "outcome": "success",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://matrix.example.test/_matrix/client/r0/joined_rooms?access_token=synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": ""
+        },
+        "body": "",
+        "outcome": "success"
+      },
+      {
+        "method": "PUT",
+        "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21one:matrix.example.test/send/m.room.message/shoutrrr-1?access_token=synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "body": "hello",
+          "msgtype": "m.text"
+        },
+        "outcome": "success"
+      },
+      {
+        "method": "PUT",
+        "url": "https://matrix.example.test/_matrix/client/r0/rooms/%21two:matrix.example.test/send/m.room.message/shoutrrr-2?access_token=synthetic-token",
+        "headers": {
+          "accept": "",
+          "content-type": "application/json"
+        },
+        "body": {
+          "body": "hello",
+          "msgtype": "m.text"
+        },
+        "outcome": "success"
+      }
+    ]
+  }
+}

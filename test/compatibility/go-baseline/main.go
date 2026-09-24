@@ -19,6 +19,7 @@ import (
 	"github.com/containrrr/shoutrrr/pkg/services/gotify"
 	"github.com/containrrr/shoutrrr/pkg/services/ifttt"
 	"github.com/containrrr/shoutrrr/pkg/services/join"
+	"github.com/containrrr/shoutrrr/pkg/services/matrix"
 	"github.com/containrrr/shoutrrr/pkg/services/mattermost"
 	"github.com/containrrr/shoutrrr/pkg/services/ntfy"
 	"github.com/containrrr/shoutrrr/pkg/services/opsgenie"
@@ -34,14 +35,15 @@ import (
 )
 
 type fixture struct {
-	Service          string            `json:"service"`
-	Params           map[string]string `json:"params"`
-	URL              string            `json:"url"`
-	Message          string            `json:"message"`
-	ResponseStatus   int               `json:"responseStatus"`
-	ResponseCode     int               `json:"responseCode"`
-	CaptureAll       bool              `json:"captureAll"`
-	TransportFailure bool              `json:"transportFailure"`
+	Service           string            `json:"service"`
+	Params            map[string]string `json:"params"`
+	URL               string            `json:"url"`
+	Message           string            `json:"message"`
+	ResponseStatus    int               `json:"responseStatus"`
+	ResponseCode      int               `json:"responseCode"`
+	CaptureAll        bool              `json:"captureAll"`
+	TransportFailure  bool              `json:"transportFailure"`
+	MatrixFailureStep string            `json:"matrixFailureStep"`
 }
 type observation struct {
 	Method   string            `json:"method"`
@@ -77,12 +79,13 @@ func main() {
 			(input.Service == "opsgenie" && parsed.Scheme != "opsgenie") ||
 			(input.Service == "slack" && parsed.Scheme != "slack") ||
 			(input.Service == "telegram" && parsed.Scheme != "telegram") ||
+			(input.Service == "matrix" && parsed.Scheme != "matrix") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "discord" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "slack" && input.Service != "telegram" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "discord" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "slack" && input.Service != "telegram" && input.Service != "matrix" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -138,6 +141,24 @@ func main() {
 				status = 204
 			}
 		}
+		if input.Service == "matrix" {
+			path := req.URL.EscapedPath()
+			if input.MatrixFailureStep != "" && strings.Contains(path, input.MatrixFailureStep) {
+				return httpmock.NewStringResponse(403, `{"errcode":"M_FORBIDDEN","error":"synthetic rejection"}`), nil
+			}
+			switch {
+			case path == "/_matrix/client/r0/login" && req.Method == "GET":
+				return httpmock.NewStringResponse(200, `{"flows":[{"type":"m.login.password"}]}`), nil
+			case path == "/_matrix/client/r0/login":
+				return httpmock.NewStringResponse(200, `{"access_token":"synthetic-access","user_id":"@user:matrix.example.test"}`), nil
+			case path == "/_matrix/client/r0/joined_rooms":
+				return httpmock.NewStringResponse(200, `{"joined_rooms":["!one:matrix.example.test","!two:matrix.example.test"]}`), nil
+			case strings.Contains(path, "/join/"):
+				return httpmock.NewStringResponse(200, `{"room_id":"!joined:matrix.example.test"}`), nil
+			default:
+				return httpmock.NewStringResponse(200, `{"event_id":"$synthetic"}`), nil
+			}
+		}
 		if input.Service == "telegram" {
 			if status >= 300 || input.ResponseCode != 0 {
 				return httpmock.NewStringResponse(status, `{"ok":false,"error_code":400,"description":"synthetic"}`), nil
@@ -188,7 +209,13 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "discord" {
+	if input.Service == "matrix" {
+		service := &matrix.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "discord" {
 		service := &discord.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")
@@ -323,12 +350,14 @@ func main() {
 			captured.Outcome = "transport-error"
 		case input.ResponseStatus >= 300 || (input.Service == "discord" && input.ResponseStatus != 0 && input.ResponseStatus != 204):
 			captured.Outcome = fmt.Sprintf("http-status-%d", input.ResponseStatus)
+		case input.MatrixFailureStep != "":
+			captured.Outcome = "matrix-step-error"
 		case input.ResponseCode != 0 && input.ResponseCode != 200:
 			captured.Outcome = fmt.Sprintf("api-code-%d", input.ResponseCode)
 		default:
 			log.Fatal("unexpected Go send failure")
 		}
-	} else if input.TransportFailure || input.ResponseStatus >= 300 || (input.ResponseCode != 0 && input.ResponseCode != 200 && input.Service != "telegram") {
+	} else if input.TransportFailure || input.ResponseStatus >= 300 || (input.ResponseCode != 0 && input.ResponseCode != 200 && input.Service != "telegram") || input.MatrixFailureStep != "" {
 		log.Fatal("Go did not reject the injected failure")
 	}
 	if input.CaptureAll {

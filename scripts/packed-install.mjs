@@ -54,7 +54,7 @@ try {
     };
     for (const entry of stable) await send(entry.url, 'packed smoke');
     if (count !== stable.length) process.exit(2);
-    try { await send('telegram://token@example.test', 'unsupported'); process.exit(3); }
+    try { await send('unsupported://token@example.test', 'unsupported'); process.exit(3); }
     catch (error) { if (!String(error.message).includes('not supported')) process.exit(4); }
   `;
   await execFileAsync("node", ["--input-type=module", "--eval", smoke], { cwd: consumer });

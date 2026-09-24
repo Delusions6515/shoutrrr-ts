@@ -10,7 +10,7 @@ import {
 
 describe("public Generic API", () => {
   it("registers Generic but rejects unpromoted schemes", async () => {
-    await expect(send("telegram://token@example.test", "hello")).rejects.toThrow("not supported");
+    await expect(send("unsupported://token@example.test", "hello")).rejects.toThrow("not supported");
   });
 
   it("redacts credentials and sensitive Generic query values", () => {
@@ -23,6 +23,30 @@ describe("public Generic API", () => {
     expect(formatURL(parsed)).toBe(value);
     expect(redactURL(formatURL(parsed))).toContain("example.test");
     expect(JSON.stringify(parsed)).not.toContain("secret");
+  });
+
+  it("hides credentials stored in IFTTT and Pushbullet URL hostnames", async () => {
+    const destinations = [
+      "ifttt://ifttt-key-canary.example.test?events=deploy",
+      "pushbullet://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/device1",
+    ];
+    for (const destination of destinations) {
+      const display = redactURL(destination);
+      expect(display).not.toContain(new URL(destination).hostname);
+    }
+    const original = globalThis.fetch;
+    globalThis.fetch = vi.fn(async () => { throw new Error("synthetic transport failure"); }) as typeof fetch;
+    try {
+      const outcomes = await sendDetailed(destinations, "hello");
+      expect(outcomes.map((outcome) => outcome.error)).toEqual([
+        "notification delivery failed", "notification delivery failed",
+      ]);
+      const serialized = JSON.stringify(outcomes);
+      expect(serialized).not.toContain("ifttt-key-canary");
+      expect(serialized).not.toContain("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    } finally {
+      globalThis.fetch = original;
+    }
   });
 
   it("reports every target in input order without exposing its raw URL", async () => {

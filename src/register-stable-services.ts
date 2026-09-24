@@ -14,6 +14,7 @@ import { descriptor as pushbullet } from "@shoutrrr-ts/pushbullet-internal";
 import { descriptor as rocketchat } from "@shoutrrr-ts/rocketchat-internal";
 import { descriptor as slack } from "@shoutrrr-ts/slack-internal";
 import { descriptor as teams } from "@shoutrrr-ts/teams-internal";
+import { descriptor as telegram } from "@shoutrrr-ts/telegram-internal";
 import { descriptor as zulip } from "@shoutrrr-ts/zulip-internal";
 
 let registered = false;
@@ -36,6 +37,7 @@ export function registerStableServices(): void {
   for (const scheme of rocketchat.schemes) registerService(scheme, rocketchat.factory);
   for (const scheme of slack.schemes) registerService(scheme, slack.factory);
   for (const scheme of teams.schemes) registerService(scheme, teams.factory);
+  for (const scheme of telegram.schemes) registerService(scheme, telegram.factory);
   for (const scheme of zulip.schemes) registerService(scheme, zulip.factory);
   registered = true;
 }

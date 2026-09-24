@@ -65,7 +65,7 @@ for (const [service, info] of Object.entries(services)) {
     }
     const expectedOutcome = fixture.transportFailure ? "transport-error" :
       fixture.responseStatus >= 300 || (service === "discord" && fixture.responseStatus && fixture.responseStatus !== 204) ? `http-status-${fixture.responseStatus}` :
-      fixture.responseCode && fixture.responseCode !== 200 ? `api-code-${fixture.responseCode}` : "success";
+      fixture.responseCode && fixture.responseCode !== 200 && service !== "telegram" ? `api-code-${fixture.responseCode}` : "success";
     if (fixture.goObserved.outcome !== expectedOutcome) {
       throw new Error(`${file} lacks the expected Go outcome`);
     }
@@ -75,7 +75,7 @@ for (const [service, info] of Object.entries(services)) {
     } catch {
       throw new Error(`${file} has an invalid outbound URL`);
     }
-    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net", pushbullet: "api.pushbullet.com", ifttt: "maker.ifttt.com", teams: "outlook.office.com", slack: ["hooks.slack.com", "slack.com"], discord: "discord.com" };
+    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net", pushbullet: "api.pushbullet.com", ifttt: "maker.ifttt.com", teams: "outlook.office.com", slack: ["hooks.slack.com", "slack.com"], discord: "discord.com", telegram: "api.telegram.org" };
     if (!host.endsWith(".example.test") && !(Array.isArray(fixedHosts[service]) ? fixedHosts[service].includes(host) : host === fixedHosts[service])) {
       throw new Error(`${file} must use a synthetic host or its upstream fixed endpoint`);
     }

@@ -29,6 +29,7 @@ Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, m
 | Rocket.Chat | Stable against Go `ccf8139` local tests | `rocketchat://push.example.test/token-a/token-b` |
 | Slack | Stable against Go `ccf8139` local tests | `slack://hook:PART1-PART2-PART3@webhook` or API-token URL |
 | Microsoft Teams | Stable against Go `ccf8139` local tests | `teams://group-uuid@tenant-uuid/alt-id/owner-uuid` or `teams+https://` webhook shortcut |
+| Telegram | Stable against Go `ccf8139` local tests; see the HTTP-200 rejection caveat in [COMPATIBILITY.md](COMPATIBILITY.md) | `telegram://12345:synthetic@telegram?chats=123` |
 | Zulip | Stable against Go `ccf8139` local tests | `zulip://bot%40example.test:api-key@chat.example.test?stream=alerts` |
 
 ## Security
@@ -39,7 +40,7 @@ Webhook URLs are trusted, privileged configuration. Do not pass attacker-control
 
 ## Compatibility and licensing
 
-The sixteen services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
+The seventeen services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 This distribution is licensed under AGPL-3.0-only. It includes adapted MIT-licensed woodpecker source and its notice in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). This project is not affiliated with Shoutrrr or woodpecker.
 

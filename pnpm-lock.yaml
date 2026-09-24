@@ -56,6 +56,9 @@ importers:
       '@shoutrrr-ts/teams-internal':
         specifier: workspace:*
         version: link:packages/teams
+      '@shoutrrr-ts/telegram-internal':
+        specifier: workspace:*
+        version: link:packages/telegram
       '@shoutrrr-ts/zulip-internal':
         specifier: workspace:*
         version: link:packages/zulip
@@ -159,6 +162,12 @@ importers:
         version: link:../core
 
   packages/teams:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/telegram:
     dependencies:
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*

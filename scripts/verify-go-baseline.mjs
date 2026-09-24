@@ -22,6 +22,9 @@ function run(binary, args, cwd) {
 if (run("git", ["rev-parse", "HEAD"], upstream) !== pinned) {
   throw new Error("Go baseline revision does not match the pinned revision");
 }
+if (run("git", ["status", "--porcelain", "--untracked-files=no"], upstream)) {
+  throw new Error("Go baseline checkout has tracked changes; use a clean checkout of the pinned revision");
+}
 const temp = await mkdtemp(join(tmpdir(), "shoutrrr-go-baseline-"));
 try {
   const modfile = join(temp, "baseline.mod");
@@ -33,7 +36,7 @@ try {
   run("go", ["mod", "download", `-modfile=${modfile}`, `github.com/AdaLogics/go-fuzz-headers@${version}`], upstream);
   let count = 0;
   for (const service of (await readdir(fixturesRoot)).sort()) {
-    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join", "googlechat", "pushbullet", "zulip", "ntfy", "ifttt", "teams", "opsgenie", "slack", "telegram", "discord"].includes(service)) continue;
+    if (!["generic", "bark", "gotify", "rocketchat", "mattermost", "pushover", "join", "googlechat", "pushbullet", "zulip", "ntfy", "ifttt", "teams", "opsgenie", "slack", "telegram", "discord", "matrix"].includes(service)) continue;
     for (const name of (await readdir(join(fixturesRoot, service))).filter((file) => file.endsWith(".json")).sort()) {
     const path = join(fixturesRoot, service, name);
     const fixture = JSON.parse(await readFile(path, "utf8"));
