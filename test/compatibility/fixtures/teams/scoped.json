@@ -1,0 +1,60 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/teams/teams_config.go: buildWebhookURL",
+  "case": "teams-scoped-host-and-title",
+  "service": "teams",
+  "url": "teams://11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc?host=tenant.example.test&title=Hi&color=ff0000",
+  "message": "first\nsecond",
+  "request": {
+    "method": "POST",
+    "url": "https://tenant.example.test/webhookb2/11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/IncomingWebhook/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "@type": "MessageCard",
+      "@context": "http://schema.org/extensions",
+      "markdown": true,
+      "title": "Hi",
+      "summary": "Hi",
+      "sections": [
+        {
+          "text": "first",
+          "startGroup": false
+        },
+        {
+          "text": "second",
+          "startGroup": false
+        }
+      ],
+      "themeColor": "ff0000"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://tenant.example.test/webhookb2/11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/IncomingWebhook/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "@context": "http://schema.org/extensions",
+      "@type": "MessageCard",
+      "markdown": true,
+      "sections": [
+        {
+          "startGroup": false,
+          "text": "first"
+        },
+        {
+          "startGroup": false,
+          "text": "second"
+        }
+      ],
+      "summary": "Hi",
+      "themeColor": "ff0000",
+      "title": "Hi"
+    },
+    "outcome": "success"
+  }
+}

@@ -25,6 +25,7 @@ Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, m
 | Pushover | Stable against Go `ccf8139` local tests | `pushover://Token:api-key@user.example.test` |
 | Pushbullet | Stable against Go `ccf8139` local tests | `pushbullet://AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/device-id` |
 | Rocket.Chat | Stable against Go `ccf8139` local tests | `rocketchat://push.example.test/token-a/token-b` |
+| Microsoft Teams | Stable against Go `ccf8139` local tests | `teams://group-uuid@tenant-uuid/alt-id/owner-uuid` or `teams+https://` webhook shortcut |
 | Zulip | Stable against Go `ccf8139` local tests | `zulip://bot%40example.test:api-key@chat.example.test?stream=alerts` |
 
 ## Security
@@ -35,7 +36,7 @@ Webhook URLs are trusted, privileged configuration. Do not pass attacker-control
 
 ## Compatibility and licensing
 
-The twelve services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
+The thirteen services listed above are stable against the documented Go revision; other Shoutrrr services are unsupported and rejected before requests are made. Go Shoutrrr is the behavioral authority; local tests do not verify live platform delivery. Compatibility details are in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 This distribution is licensed under AGPL-3.0-only. It includes adapted MIT-licensed woodpecker source and its notice in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). This project is not affiliated with Shoutrrr or woodpecker.
 

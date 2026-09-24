@@ -18,7 +18,7 @@
     "rocketchat": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "slack": { "status": "pending" },
     "smtp": { "status": "pending" },
-    "teams": { "status": "pending" },
+    "teams": { "status": "stable", "fixtures": ["basic", "custom-url", "http-error", "scoped"], "livePlatform": "unverified" },
     "telegram": { "status": "pending" },
     "zulip": { "status": "stable", "fixtures": ["basic", "http-error", "no-topic"], "livePlatform": "unverified" }
   }

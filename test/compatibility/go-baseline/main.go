@@ -23,6 +23,7 @@ import (
 	"github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
+	"github.com/containrrr/shoutrrr/pkg/services/teams"
 	"github.com/containrrr/shoutrrr/pkg/services/zulip"
 	"github.com/containrrr/shoutrrr/pkg/types"
 	"github.com/jarcoal/httpmock"
@@ -60,19 +61,20 @@ func main() {
 		log.Fatal(err)
 	}
 	parsed, err := url.Parse(input.URL)
-	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
+	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "teams" && parsed.Hostname() == "22222222-4444-4444-8444-cccccccccccc") && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
 		((input.Service == "bark" && parsed.Scheme != "bark") ||
 			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
 			(input.Service == "googlechat" && parsed.Scheme != "googlechat" && parsed.Scheme != "hangouts") ||
 			(input.Service == "zulip" && parsed.Scheme != "zulip") ||
 			(input.Service == "ntfy" && parsed.Scheme != "ntfy") ||
 			(input.Service == "ifttt" && parsed.Scheme != "ifttt") ||
+			(input.Service == "teams" && parsed.Scheme != "teams" && parsed.Scheme != "teams+https") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -81,7 +83,7 @@ func main() {
 	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -154,7 +156,19 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "ifttt" {
+	if input.Service == "teams" {
+		service := &teams.Service{}
+		if parsed.Scheme == "teams+https" {
+			parsed, err = service.GetConfigURLFromCustom(parsed)
+			if err != nil {
+				log.Fatal("Go shortcut conversion failed")
+			}
+		}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "ifttt" {
 		service := &ifttt.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")

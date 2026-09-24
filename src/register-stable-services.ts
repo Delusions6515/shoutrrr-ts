@@ -10,6 +10,7 @@ import { descriptor as ntfy } from "@shoutrrr-ts/ntfy-internal";
 import { descriptor as pushover } from "@shoutrrr-ts/pushover-internal";
 import { descriptor as pushbullet } from "@shoutrrr-ts/pushbullet-internal";
 import { descriptor as rocketchat } from "@shoutrrr-ts/rocketchat-internal";
+import { descriptor as teams } from "@shoutrrr-ts/teams-internal";
 import { descriptor as zulip } from "@shoutrrr-ts/zulip-internal";
 
 let registered = false;
@@ -28,6 +29,7 @@ export function registerStableServices(): void {
   for (const scheme of pushover.schemes) registerService(scheme, pushover.factory);
   for (const scheme of pushbullet.schemes) registerService(scheme, pushbullet.factory);
   for (const scheme of rocketchat.schemes) registerService(scheme, rocketchat.factory);
+  for (const scheme of teams.schemes) registerService(scheme, teams.factory);
   for (const scheme of zulip.schemes) registerService(scheme, zulip.factory);
   registered = true;
 }

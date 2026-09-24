@@ -1,0 +1,50 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/teams/teams.go: GetConfigURLFromCustom",
+  "case": "teams-custom-webhook-shortcut",
+  "service": "teams",
+  "url": "teams+https://tenant.example.test/webhookb2/11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/IncomingWebhook/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc?title=Shortcut",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://tenant.example.test/webhookb2/11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/IncomingWebhook/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc",
+    "headers": {
+      "content-type": "application/json",
+      "accept": ""
+    },
+    "body": {
+      "@type": "MessageCard",
+      "@context": "http://schema.org/extensions",
+      "markdown": true,
+      "title": "Shortcut",
+      "summary": "Shortcut",
+      "sections": [
+        {
+          "text": "hello",
+          "startGroup": false
+        }
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://tenant.example.test/webhookb2/11111111-4444-4444-8444-cccccccccccc@22222222-4444-4444-8444-cccccccccccc/IncomingWebhook/33333333012222222222333333333344/44444444-4444-4444-8444-cccccccccccc",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "@context": "http://schema.org/extensions",
+      "@type": "MessageCard",
+      "markdown": true,
+      "sections": [
+        {
+          "startGroup": false,
+          "text": "hello"
+        }
+      ],
+      "summary": "Shortcut",
+      "title": "Shortcut"
+    },
+    "outcome": "success"
+  }
+}
