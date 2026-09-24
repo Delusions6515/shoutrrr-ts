@@ -2,7 +2,14 @@ import { readdir, readFile } from "node:fs/promises";
 import { isDeepStrictEqual } from "node:util";
 
 const root = "test/compatibility";
-const manifest = JSON.parse(await readFile(`${root}/services.json`, "utf8"));
+async function readJSON(path) {
+  try {
+    return JSON.parse(await readFile(path, "utf8"));
+  } catch {
+    throw new Error("Compatibility evidence contains invalid JSON");
+  }
+}
+const manifest = await readJSON(`${root}/services.json`);
 const services = manifest.services;
 const expected = [
   "bark", "discord", "generic", "googlechat", "gotify", "ifttt", "join",
@@ -39,7 +46,7 @@ for (const [service, info] of Object.entries(services)) {
     throw new Error(`Fixture names for ${service} differ from the ledger`);
   }
   for (const file of files) {
-    const fixture = JSON.parse(await readFile(`${directory}/${file}`, "utf8"));
+    const fixture = await readJSON(`${directory}/${file}`);
     for (const key of ["source", "case", "url", "message", "request", "goObserved"]) {
       if (!(key in fixture)) throw new Error(`${file} is missing ${key}`);
     }
@@ -62,9 +69,14 @@ for (const [service, info] of Object.entries(services)) {
     if (fixture.goObserved.outcome !== expectedOutcome) {
       throw new Error(`${file} lacks the expected Go outcome`);
     }
-    const host = new URL(fixture.request.url).hostname;
-    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net", pushbullet: "api.pushbullet.com", ifttt: "maker.ifttt.com", teams: "outlook.office.com" };
-    if (!host.endsWith(".example.test") && host !== fixedHosts[service]) {
+    let host;
+    try {
+      host = new URL(fixture.request.url).hostname;
+    } catch {
+      throw new Error(`${file} has an invalid outbound URL`);
+    }
+    const fixedHosts = { join: "joinjoaomgcd.appspot.com", pushover: "api.pushover.net", pushbullet: "api.pushbullet.com", ifttt: "maker.ifttt.com", teams: "outlook.office.com", slack: ["hooks.slack.com", "slack.com"] };
+    if (!host.endsWith(".example.test") && !(Array.isArray(fixedHosts[service]) ? fixedHosts[service].includes(host) : host === fixedHosts[service])) {
       throw new Error(`${file} must use a synthetic host or its upstream fixed endpoint`);
     }
     count++;

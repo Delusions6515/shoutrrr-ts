@@ -16,7 +16,7 @@
     "pushbullet": { "status": "stable", "fixtures": ["basic", "first-failure", "http-error", "multiple", "uppercase-token"], "livePlatform": "unverified" },
     "pushover": { "status": "stable", "fixtures": ["basic", "http-error", "options"], "livePlatform": "unverified" },
     "rocketchat": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
-    "slack": { "status": "pending" },
+    "slack": { "status": "stable", "fixtures": ["api-error", "api-options", "legacy", "transport-error", "webhook", "webhook-error"], "livePlatform": "unverified" },
     "smtp": { "status": "pending" },
     "teams": { "status": "stable", "fixtures": ["basic", "custom-url", "http-error", "scoped"], "livePlatform": "unverified" },
     "telegram": { "status": "pending" },

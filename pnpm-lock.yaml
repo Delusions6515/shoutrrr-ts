@@ -47,6 +47,9 @@ importers:
       '@shoutrrr-ts/rocketchat-internal':
         specifier: workspace:*
         version: link:packages/rocketchat
+      '@shoutrrr-ts/slack-internal':
+        specifier: workspace:*
+        version: link:packages/slack
       '@shoutrrr-ts/teams-internal':
         specifier: workspace:*
         version: link:packages/teams
@@ -135,6 +138,12 @@ importers:
         version: link:../core
 
   packages/rocketchat:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/slack:
     dependencies:
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*

@@ -1,0 +1,44 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/slack/slack_config.go: setURL",
+  "case": "slack-legacy-webhook",
+  "service": "slack",
+  "url": "slack://testbot@AAAAAAAAA/BBBBBBBBB/123456789123456789123456?title=Legacy",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/123456789123456789123456",
+    "headers": {
+      "accept": "",
+      "authorization": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "Legacy",
+      "username": "testbot",
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/123456789123456789123456",
+    "headers": {
+      "accept": "",
+      "authorization": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ],
+      "text": "Legacy",
+      "username": "testbot"
+    },
+    "outcome": "success"
+  }
+}

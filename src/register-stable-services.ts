@@ -7,10 +7,11 @@ import { descriptor as ifttt } from "@shoutrrr-ts/ifttt-internal";
 import { descriptor as join } from "@shoutrrr-ts/join-internal";
 import { descriptor as mattermost } from "@shoutrrr-ts/mattermost-internal";
 import { descriptor as ntfy } from "@shoutrrr-ts/ntfy-internal";
-import { descriptor as opsgenie } from "@shoutrrr-ts/opsgenie-internal";
+import { descriptor as opsGenie } from "@shoutrrr-ts/opsgenie-internal";
 import { descriptor as pushover } from "@shoutrrr-ts/pushover-internal";
 import { descriptor as pushbullet } from "@shoutrrr-ts/pushbullet-internal";
 import { descriptor as rocketchat } from "@shoutrrr-ts/rocketchat-internal";
+import { descriptor as slack } from "@shoutrrr-ts/slack-internal";
 import { descriptor as teams } from "@shoutrrr-ts/teams-internal";
 import { descriptor as zulip } from "@shoutrrr-ts/zulip-internal";
 
@@ -27,10 +28,11 @@ export function registerStableServices(): void {
   for (const scheme of join.schemes) registerService(scheme, join.factory);
   for (const scheme of mattermost.schemes) registerService(scheme, mattermost.factory);
   for (const scheme of ntfy.schemes) registerService(scheme, ntfy.factory);
-  for (const scheme of opsgenie.schemes) registerService(scheme, opsgenie.factory);
+  for (const scheme of opsGenie.schemes) registerService(scheme, opsGenie.factory);
   for (const scheme of pushover.schemes) registerService(scheme, pushover.factory);
   for (const scheme of pushbullet.schemes) registerService(scheme, pushbullet.factory);
   for (const scheme of rocketchat.schemes) registerService(scheme, rocketchat.factory);
+  for (const scheme of slack.schemes) registerService(scheme, slack.factory);
   for (const scheme of teams.schemes) registerService(scheme, teams.factory);
   for (const scheme of zulip.schemes) registerService(scheme, zulip.factory);
   registered = true;

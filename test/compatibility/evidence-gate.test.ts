@@ -23,6 +23,12 @@ it("blocks a stable service when its Go observation is missing or differs", asyn
     fixture.request.method = "PUT";
     await writeFile(path, JSON.stringify(fixture));
     expect(verify().status).not.toBe(0);
+
+    const canary = "SYNTHETIC_SECRET_CANARY";
+    await writeFile(path, `{${canary}`);
+    const invalid = verify();
+    expect(invalid.status).not.toBe(0);
+    expect(invalid.stderr).not.toContain(canary);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

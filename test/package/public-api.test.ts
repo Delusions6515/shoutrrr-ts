@@ -10,7 +10,7 @@ import {
 
 describe("public Generic API", () => {
   it("registers Generic but rejects unpromoted schemes", async () => {
-    await expect(send("slack://token@example.test", "hello")).rejects.toThrow("not supported");
+    await expect(send("telegram://token@example.test", "hello")).rejects.toThrow("not supported");
   });
 
   it("redacts credentials and sensitive Generic query values", () => {

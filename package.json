@@ -35,6 +35,7 @@
     "@shoutrrr-ts/pushover-internal": "workspace:*",
     "@shoutrrr-ts/pushbullet-internal": "workspace:*",
     "@shoutrrr-ts/rocketchat-internal": "workspace:*",
+    "@shoutrrr-ts/slack-internal": "workspace:*",
     "@shoutrrr-ts/teams-internal": "workspace:*",
     "@shoutrrr-ts/zulip-internal": "workspace:*",
     "@types/node": "^22.0.0",

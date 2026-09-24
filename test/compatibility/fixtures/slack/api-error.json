@@ -1,0 +1,45 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/slack/slack.go: sendAPI",
+  "case": "slack-api-200-rejected",
+  "service": "slack",
+  "url": "slack://xoxb:123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N@C0123456789",
+  "message": "hello",
+  "responseCode": 400,
+  "request": {
+    "method": "POST",
+    "url": "https://slack.com/api/chat.postMessage",
+    "headers": {
+      "accept": "",
+      "authorization": "Bearer xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "",
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ],
+      "channel": "C0123456789"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://slack.com/api/chat.postMessage",
+    "headers": {
+      "accept": "",
+      "authorization": "Bearer xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N",
+      "content-type": "application/json"
+    },
+    "body": {
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ],
+      "channel": "C0123456789",
+      "text": ""
+    },
+    "outcome": "api-code-400"
+  }
+}

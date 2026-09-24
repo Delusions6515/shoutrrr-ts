@@ -24,6 +24,7 @@ import (
 	"github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
+	"github.com/containrrr/shoutrrr/pkg/services/slack"
 	"github.com/containrrr/shoutrrr/pkg/services/teams"
 	"github.com/containrrr/shoutrrr/pkg/services/zulip"
 	"github.com/containrrr/shoutrrr/pkg/types"
@@ -62,7 +63,7 @@ func main() {
 		log.Fatal(err)
 	}
 	parsed, err := url.Parse(input.URL)
-	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "teams" && parsed.Hostname() == "22222222-4444-4444-8444-cccccccccccc") && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
+	if err != nil || (!strings.HasSuffix(parsed.Hostname(), ".example.test") && !(input.Service == "join" && parsed.Hostname() == "join") && !(input.Service == "teams" && parsed.Hostname() == "22222222-4444-4444-8444-cccccccccccc") && !(input.Service == "slack" && (parsed.Hostname() == "webhook" || parsed.Hostname() == "C0123456789" || parsed.Hostname() == "AAAAAAAAA")) && !(input.Service == "pushbullet" && (parsed.Hostname() == strings.Repeat("a", 34) || parsed.Hostname() == strings.Repeat("A", 34)))) ||
 		((input.Service == "bark" && parsed.Scheme != "bark") ||
 			(input.Service == "gotify" && parsed.Scheme != "gotify") ||
 			(input.Service == "googlechat" && parsed.Scheme != "googlechat" && parsed.Scheme != "hangouts") ||
@@ -71,12 +72,13 @@ func main() {
 			(input.Service == "ifttt" && parsed.Scheme != "ifttt") ||
 			(input.Service == "teams" && parsed.Scheme != "teams" && parsed.Scheme != "teams+https") ||
 			(input.Service == "opsgenie" && parsed.Scheme != "opsgenie") ||
+			(input.Service == "slack" && parsed.Scheme != "slack") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "slack" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -85,7 +87,7 @@ func main() {
 	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "api.opsgenie.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "api.opsgenie.com" && req.URL.Hostname() != "hooks.slack.com" && req.URL.Hostname() != "slack.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -105,7 +107,7 @@ func main() {
 		captured = &observation{Method: req.Method, URL: req.URL.String(), Headers: map[string]string{
 			"content-type": req.Header.Get("Content-Type"), "accept": req.Header.Get("Accept"),
 		}, Body: body, Outcome: "success"}
-		if input.Service == "opsgenie" {
+		if input.Service == "opsgenie" || input.Service == "slack" {
 			captured.Headers["authorization"] = req.Header.Get("Authorization")
 		}
 		if input.Service == "pushbullet" {
@@ -128,6 +130,18 @@ func main() {
 		status := input.ResponseStatus
 		if status == 0 {
 			status = 200
+		}
+		if input.Service == "slack" {
+			if req.URL.Hostname() == "slack.com" {
+				if status >= 300 || input.ResponseCode != 0 {
+					return httpmock.NewStringResponse(status, `{"ok":false,"error":"synthetic"}`), nil
+				}
+				return httpmock.NewStringResponse(status, `{"ok":true}`), nil
+			}
+			if status >= 300 || input.ResponseCode != 0 {
+				return httpmock.NewStringResponse(status, "synthetic rejection"), nil
+			}
+			return httpmock.NewStringResponse(status, "ok"), nil
 		}
 		if input.Service == "ntfy" {
 			if status >= 300 {
@@ -161,7 +175,13 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "opsgenie" {
+	if input.Service == "slack" {
+		service := &slack.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "opsgenie" {
 		service := &opsgenie.Service{}
 		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
 			log.Fatal("Go initialization failed")

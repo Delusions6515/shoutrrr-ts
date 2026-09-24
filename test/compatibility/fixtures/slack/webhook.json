@@ -1,0 +1,42 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/slack/slack.go: sendWebhook",
+  "case": "slack-webhook",
+  "service": "slack",
+  "url": "slack://hook:AAAAAAAAA-BBBBBBBBB-123456789123456789123456@webhook",
+  "message": "hello",
+  "request": {
+    "method": "POST",
+    "url": "https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/123456789123456789123456",
+    "headers": {
+      "accept": "",
+      "authorization": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "",
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/123456789123456789123456",
+    "headers": {
+      "accept": "",
+      "authorization": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "attachments": [
+        {
+          "text": "hello"
+        }
+      ],
+      "text": ""
+    },
+    "outcome": "success"
+  }
+}

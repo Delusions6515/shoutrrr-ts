@@ -1,0 +1,60 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/slack/slack.go: sendAPI",
+  "case": "slack-api-options",
+  "service": "slack",
+  "url": "slack://xoxb:123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N@C0123456789?title=Deploy&botname=Notifier&color=blue&thread_ts=123.456&icon=%3Arocket%3A",
+  "message": "first\nsecond\n",
+  "request": {
+    "method": "POST",
+    "url": "https://slack.com/api/chat.postMessage",
+    "headers": {
+      "accept": "",
+      "authorization": "Bearer xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "Deploy",
+      "username": "Notifier",
+      "attachments": [
+        {
+          "text": "first",
+          "color": "blue"
+        },
+        {
+          "text": "second",
+          "color": "blue"
+        }
+      ],
+      "thread_ts": "123.456",
+      "channel": "C0123456789",
+      "icon_emoji": ":rocket:"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://slack.com/api/chat.postMessage",
+    "headers": {
+      "accept": "",
+      "authorization": "Bearer xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N",
+      "content-type": "application/json"
+    },
+    "body": {
+      "attachments": [
+        {
+          "color": "blue",
+          "text": "first"
+        },
+        {
+          "color": "blue",
+          "text": "second"
+        }
+      ],
+      "channel": "C0123456789",
+      "icon_emoji": ":rocket:",
+      "text": "Deploy",
+      "thread_ts": "123.456",
+      "username": "Notifier"
+    },
+    "outcome": "success"
+  }
+}
