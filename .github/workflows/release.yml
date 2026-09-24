@@ -3,10 +3,9 @@ on:
   push:
     tags: ["v*"]
 permissions:
-  contents: read
-  id-token: write
+  contents: write
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -24,4 +23,14 @@ jobs:
           fi
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
-      - run: pnpm publish --provenance --no-git-checks
+      - name: Pack release archive
+        run: |
+          mkdir -p release
+          pnpm pack --pack-destination release
+          (cd release && sha256sum ./*.tgz > SHA256SUMS)
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/*.tgz release/SHA256SUMS \
+            --verify-tag --generate-notes --title "$GITHUB_REF_NAME"

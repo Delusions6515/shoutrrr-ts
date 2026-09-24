@@ -10,6 +10,16 @@ await send("generic+https://hooks.example.test/notify", "Deployment complete");
 
 Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, message, { timeoutMs })` for ordered, redacted per-target outcomes. A timeout cancels only its affected target.
 
+## Installation
+
+Install a fixed release version from the tarball attached to each [GitHub Release](releases):
+
+```bash
+pnpm add https://github.com/Delusions6515/shoutrrr-ts/releases/download/v0.1.0/shoutrrr-ts-0.1.0.tgz
+```
+
+You can also download the asset and install it locally with `pnpm add ./shoutrrr-ts-0.1.0.tgz`. Each release uploads a `SHA256SUMS` checksum file so you can verify the tarball.
+
 ## Stable services
 
 | Service | Status | URL forms |
