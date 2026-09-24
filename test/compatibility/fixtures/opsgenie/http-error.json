@@ -1,0 +1,33 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/opsgenie/opsgenie.go: sendAlert",
+  "case": "opsgenie-http-error",
+  "service": "opsgenie",
+  "url": "opsgenie://api.example.test/key-synthetic",
+  "message": "hello",
+  "responseStatus": 503,
+  "request": {
+    "method": "POST",
+    "url": "https://api.example.test:443/v2/alerts",
+    "headers": {
+      "accept": "",
+      "authorization": "GenieKey key-synthetic",
+      "content-type": "application/json"
+    },
+    "body": {
+      "message": "hello"
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.example.test:443/v2/alerts",
+    "headers": {
+      "accept": "",
+      "authorization": "GenieKey key-synthetic",
+      "content-type": "application/json"
+    },
+    "body": {
+      "message": "hello"
+    },
+    "outcome": "http-status-503"
+  }
+}

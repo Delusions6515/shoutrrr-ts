@@ -10,7 +10,7 @@
   "types": "./dist/index.d.ts",
   "files": ["dist", "README.md", "LICENSE", "LICENSES", "THIRD_PARTY_NOTICES.md", "COMPATIBILITY.md"],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown --config-loader native",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -31,6 +31,7 @@
     "@shoutrrr-ts/join-internal": "workspace:*",
     "@shoutrrr-ts/mattermost-internal": "workspace:*",
     "@shoutrrr-ts/ntfy-internal": "workspace:*",
+    "@shoutrrr-ts/opsgenie-internal": "workspace:*",
     "@shoutrrr-ts/pushover-internal": "workspace:*",
     "@shoutrrr-ts/pushbullet-internal": "workspace:*",
     "@shoutrrr-ts/rocketchat-internal": "workspace:*",

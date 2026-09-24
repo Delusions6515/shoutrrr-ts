@@ -35,6 +35,9 @@ importers:
       '@shoutrrr-ts/ntfy-internal':
         specifier: workspace:*
         version: link:packages/ntfy
+      '@shoutrrr-ts/opsgenie-internal':
+        specifier: workspace:*
+        version: link:packages/opsgenie
       '@shoutrrr-ts/pushbullet-internal':
         specifier: workspace:*
         version: link:packages/pushbullet
@@ -108,6 +111,12 @@ importers:
         version: link:../core
 
   packages/ntfy:
+    dependencies:
+      '@shoutrrr-ts/core-internal':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/opsgenie:
     dependencies:
       '@shoutrrr-ts/core-internal':
         specifier: workspace:*

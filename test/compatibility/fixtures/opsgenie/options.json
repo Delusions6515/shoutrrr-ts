@@ -1,0 +1,68 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/opsgenie/opsgenie.go: newAlertPayload",
+  "case": "opsgenie-options",
+  "service": "opsgenie",
+  "url": "opsgenie://api.example.test/key-synthetic?title=Title&alias=reference&responders=team:operations&tags=blue,green&details=region:west",
+  "message": "hello",
+  "params": {
+    "description": "extra",
+    "priority": "P1"
+  },
+  "request": {
+    "method": "POST",
+    "url": "https://api.example.test:443/v2/alerts",
+    "headers": {
+      "accept": "",
+      "authorization": "GenieKey key-synthetic",
+      "content-type": "application/json"
+    },
+    "body": {
+      "alias": "reference",
+      "description": "hello\nextra",
+      "details": {
+        "region": "west"
+      },
+      "message": "Title",
+      "priority": "P1",
+      "responders": [
+        {
+          "name": "operations",
+          "type": "team"
+        }
+      ],
+      "tags": [
+        "blue",
+        "green"
+      ]
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.example.test:443/v2/alerts",
+    "headers": {
+      "accept": "",
+      "authorization": "GenieKey key-synthetic",
+      "content-type": "application/json"
+    },
+    "body": {
+      "alias": "reference",
+      "description": "hello\nextra",
+      "details": {
+        "region": "west"
+      },
+      "message": "Title",
+      "priority": "P1",
+      "responders": [
+        {
+          "name": "operations",
+          "type": "team"
+        }
+      ],
+      "tags": [
+        "blue",
+        "green"
+      ]
+    },
+    "outcome": "success"
+  }
+}

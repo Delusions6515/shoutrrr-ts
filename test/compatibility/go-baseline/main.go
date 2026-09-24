@@ -20,6 +20,7 @@ import (
 	"github.com/containrrr/shoutrrr/pkg/services/join"
 	"github.com/containrrr/shoutrrr/pkg/services/mattermost"
 	"github.com/containrrr/shoutrrr/pkg/services/ntfy"
+	"github.com/containrrr/shoutrrr/pkg/services/opsgenie"
 	"github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/containrrr/shoutrrr/pkg/services/rocketchat"
@@ -69,12 +70,13 @@ func main() {
 			(input.Service == "ntfy" && parsed.Scheme != "ntfy") ||
 			(input.Service == "ifttt" && parsed.Scheme != "ifttt") ||
 			(input.Service == "teams" && parsed.Scheme != "teams" && parsed.Scheme != "teams+https") ||
+			(input.Service == "opsgenie" && parsed.Scheme != "opsgenie") ||
 			(input.Service == "rocketchat" && parsed.Scheme != "rocketchat") ||
 			(input.Service == "mattermost" && parsed.Scheme != "mattermost") ||
 			(input.Service == "pushover" && parsed.Scheme != "pushover") ||
 			(input.Service == "pushbullet" && parsed.Scheme != "pushbullet") ||
 			(input.Service == "join" && parsed.Scheme != "join") ||
-			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
+			(input.Service != "bark" && input.Service != "gotify" && input.Service != "googlechat" && input.Service != "zulip" && input.Service != "ntfy" && input.Service != "ifttt" && input.Service != "teams" && input.Service != "opsgenie" && input.Service != "rocketchat" && input.Service != "mattermost" && input.Service != "pushover" && input.Service != "pushbullet" && input.Service != "join" && !strings.HasPrefix(parsed.Scheme, "generic"))) {
 		log.Fatal("only synthetic service fixtures are accepted")
 	}
 	httpmock.Activate()
@@ -83,7 +85,7 @@ func main() {
 	var requests []observation
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		if !strings.HasSuffix(req.URL.Hostname(), ".example.test") &&
-			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
+			req.URL.Hostname() != "api.pushover.net" && req.URL.Hostname() != "api.pushbullet.com" && req.URL.Hostname() != "maker.ifttt.com" && req.URL.Hostname() != "outlook.office.com" && req.URL.Hostname() != "api.opsgenie.com" && req.URL.Hostname() != "joinjoaomgcd.appspot.com" {
 			return nil, fmt.Errorf("unexpected destination")
 		}
 		var payload []byte
@@ -103,6 +105,9 @@ func main() {
 		captured = &observation{Method: req.Method, URL: req.URL.String(), Headers: map[string]string{
 			"content-type": req.Header.Get("Content-Type"), "accept": req.Header.Get("Accept"),
 		}, Body: body, Outcome: "success"}
+		if input.Service == "opsgenie" {
+			captured.Headers["authorization"] = req.Header.Get("Authorization")
+		}
 		if input.Service == "pushbullet" {
 			captured.Headers["access-token"] = req.Header.Get("Access-Token")
 		}
@@ -156,7 +161,13 @@ func main() {
 		value := types.Params(input.Params)
 		params = &value
 	}
-	if input.Service == "teams" {
+	if input.Service == "opsgenie" {
+		service := &opsgenie.Service{}
+		if err := service.Initialize(parsed, log.New(io.Discard, "", 0)); err != nil {
+			log.Fatal("Go initialization failed")
+		}
+		err = service.Send(input.Message, params)
+	} else if input.Service == "teams" {
 		service := &teams.Service{}
 		if parsed.Scheme == "teams+https" {
 			parsed, err = service.GetConfigURLFromCustom(parsed)
