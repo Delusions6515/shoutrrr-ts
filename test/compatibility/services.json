@@ -19,7 +19,7 @@
     "slack": { "status": "stable", "fixtures": ["api-error", "api-options", "legacy", "transport-error", "webhook", "webhook-error"], "livePlatform": "unverified" },
     "smtp": { "status": "pending" },
     "teams": { "status": "stable", "fixtures": ["basic", "custom-url", "http-error", "scoped"], "livePlatform": "unverified" },
-    "telegram": { "status": "pending" },
+    "telegram": { "status": "deferred", "reason": "Pinned Go reports success for an HTTP 200 sendMessage response with ok=false; require a documented compatibility decision before promotion" },
     "zulip": { "status": "stable", "fixtures": ["basic", "http-error", "no-topic"], "livePlatform": "unverified" }
   }
 }

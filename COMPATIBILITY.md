@@ -28,6 +28,8 @@ OpsGenie posts an alert JSON body over HTTPS to the configured host and port, wi
 
 Slack supports legacy and modern incoming-webhook URLs plus `xoxb`/`xoxp` API-token URLs at the pinned Go revision. It posts line attachments to a fixed HTTPS endpoint; API mode uses a Bearer authorization header and requires `ok: true` inside the JSON response, whereas webhook mode checks the response text. Title, icon, bot name, color, and thread settings follow Go's query and persistent send-override behavior. Local fixtures cover both modes, a rejected API response inside HTTP 200, HTTP failure, and transport failure. Tokens and outbound URLs are privileged; live Slack delivery is unverified.
 
+Telegram remains **deferred and unregistered**. The pinned Go client reports success for a synthetic HTTP 200 `sendMessage` response containing `{"ok":false}`, despite the vendor-level rejection. A TypeScript adapter that rejects that response would diverge from Go; one that returns success would hide delivery failure. The recorded Go case is retained for a future explicit compatibility decision. No Telegram delivery is claimed.
+
 Node Fetch may add transport headers that differ from Go's HTTP client. These runtime-generated headers are intentionally excluded from service compatibility assertions. Raw webhook URLs are privileged configuration, not untrusted input: parsing does not prevent SSRF, and applications must not accept destinations from attackers.
 
 ## Service promotion gate

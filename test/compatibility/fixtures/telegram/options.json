@@ -1,0 +1,42 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/telegram/telegram_json.go: createSendMessagePayload",
+  "case": "telegram-html-title-and-thread",
+  "service": "telegram",
+  "url": "telegram://12345:synthetic@telegram?chats=123%3A4&title=Alert%3C%26%3E&preview=No&notification=No",
+  "message": "a < b & c",
+  "request": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "<b>Alert&lt;&amp;&gt;</b>\na &lt; b &amp; c",
+      "chat_id": "123",
+      "message_thread_id": 4,
+      "parse_mode": "HTML",
+      "disable_web_page_preview": true,
+      "disable_notification": true,
+      "reply_to_message_id": 0
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "chat_id": "123",
+      "disable_notification": true,
+      "disable_web_page_preview": true,
+      "message_thread_id": 4,
+      "parse_mode": "HTML",
+      "reply_to_message_id": 0,
+      "text": "<b>Alert&lt;&amp;&gt;</b>\na &lt; b &amp; c"
+    },
+    "outcome": "success"
+  }
+}

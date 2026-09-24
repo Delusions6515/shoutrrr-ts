@@ -1,0 +1,39 @@
+{
+  "source": "containrrr/shoutrrr ccf8139 pkg/services/telegram/telegram_client.go: SendMessage",
+  "case": "telegram-http-200-api-rejection",
+  "service": "telegram",
+  "url": "telegram://12345:synthetic@telegram?chats=123",
+  "message": "hello",
+  "responseCode": 400,
+  "request": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "text": "hello",
+      "chat_id": "123",
+      "disable_web_page_preview": false,
+      "disable_notification": false,
+      "reply_to_message_id": 0
+    }
+  },
+  "goObserved": {
+    "method": "POST",
+    "url": "https://api.telegram.org/bot12345:synthetic/sendMessage",
+    "headers": {
+      "accept": "",
+      "content-type": "application/json"
+    },
+    "body": {
+      "chat_id": "123",
+      "disable_notification": false,
+      "disable_web_page_preview": false,
+      "reply_to_message_id": 0,
+      "text": "hello"
+    },
+    "outcome": "success"
+  }
+}
