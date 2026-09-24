@@ -9,7 +9,7 @@
     "gotify": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "ifttt": { "status": "stable", "fixtures": ["basic", "first-failure", "multiple"], "livePlatform": "unverified" },
     "join": { "status": "stable", "fixtures": ["basic", "http-error", "options"], "livePlatform": "unverified" },
-    "matrix": { "status": "pending" },
+    "matrix": { "status": "deferred", "reason": "No Go comparison yet for token versus login, room join/list/send ordering, and transaction IDs", "nextStep": "Add a synthetic Go HTTP recorder for both authentication modes and per-room failure outcomes" },
     "mattermost": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "ntfy": { "status": "stable", "fixtures": ["auth", "basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "opsgenie": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
@@ -17,9 +17,9 @@
     "pushover": { "status": "stable", "fixtures": ["basic", "http-error", "options"], "livePlatform": "unverified" },
     "rocketchat": { "status": "stable", "fixtures": ["basic", "http-error", "options", "transport-error"], "livePlatform": "unverified" },
     "slack": { "status": "stable", "fixtures": ["api-error", "api-options", "legacy", "transport-error", "webhook", "webhook-error"], "livePlatform": "unverified" },
-    "smtp": { "status": "pending" },
+    "smtp": { "status": "deferred", "reason": "SMTP/TLS negotiation, authentication, envelope, and MIME behavior need a disposable protocol recorder", "nextStep": "Capture pinned Go plaintext, STARTTLS, implicit TLS, auth rejection, and recipient failure with a local SMTP server" },
     "teams": { "status": "stable", "fixtures": ["basic", "custom-url", "http-error", "scoped"], "livePlatform": "unverified" },
-    "telegram": { "status": "deferred", "reason": "Pinned Go reports success for an HTTP 200 sendMessage response with ok=false; require a documented compatibility decision before promotion" },
+    "telegram": { "status": "deferred", "reason": "Pinned Go reports success for an HTTP 200 sendMessage response with ok=false; require a documented compatibility decision before promotion", "nextStep": "Decide explicitly whether to preserve the pinned Go false-success result or document a deliberate vendor-error incompatibility before implementing both multi-chat and failure paths" },
     "zulip": { "status": "stable", "fixtures": ["basic", "http-error", "no-topic"], "livePlatform": "unverified" }
   }
 }
