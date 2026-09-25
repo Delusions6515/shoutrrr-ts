@@ -37,3 +37,5 @@ export type {
   ServiceSendOptions,
 } from "./types.ts";
 export { MessageLevel } from "./types.ts";
+export { getTransport, withTransport } from "./transport.ts";
+export type { HttpTransport } from "./transport.ts";

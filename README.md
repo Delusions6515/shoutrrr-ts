@@ -8,7 +8,41 @@ import { send } from "shoutrrr-ts";
 await send("generic+https://hooks.example.test/notify", "Deployment complete");
 ```
 
-Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, message, { timeoutMs })` for ordered, redacted per-target outcomes. A timeout cancels only its affected target.
+Use `createSender(urlA, urlB)` for best-effort fan-out, or `sendDetailed(urls, message, { timeoutMs })` for ordered, redacted per-target outcomes. A timeout settles only its affected target's outcome; physical cancellation depends on the selected transport.
+
+## Host HTTP transport
+
+Pass a Fetch-shaped `HttpTransport` to `send`, `createSender`, or `sendDetailed`. Every request from a supported service then uses that transport, including Generic GET/HEAD requests with bodies and ntfy's raw byte body. Without it, existing transport behavior is unchanged.
+
+```ts
+import { createSender, send, sendDetailed, type HttpTransport } from "shoutrrr-ts";
+
+// Adapt your host's configured HTTP client; do not construct a new client per request.
+const transport: HttpTransport = async (url, init) => {
+  const body = init?.body;
+  if (body != null && typeof body !== "string" && !(body instanceof Uint8Array)) {
+    throw new Error("unsupported notification request body");
+  }
+  const result = await $http.request({
+    url,
+    method: init?.method ?? "GET",
+    headers: Object.fromEntries(new Headers(init?.headers)),
+    body,
+  });
+  return new Response([204, 205, 304].includes(result.statusCode) ? null : result.body ?? "", {
+    status: result.statusCode,
+  });
+};
+
+await send("generic+https://hooks.example.test/notify", "hello", { transport });
+const sender = createSender({ transport }, "ntfy://push.example.test/topic");
+await sender.sendAsync("hello");
+await sendDetailed(["generic+https://hooks.example.test/notify"], "hello", { transport, timeoutMs: 5000 });
+```
+
+`$http` above is a placeholder for a caller-owned client (for example, a configured `HTTP()` instance in Sub-Store), not a package dependency. Its adapter must preserve method, URL, headers, body bytes, status and response text; support GET/HEAD bodies; and reject shapes it cannot represent instead of falling back to native `fetch`. Return a Fetch `Response` with a valid status. Follow redirects safely: do not forward Authorization, Cookie or proxy credentials to an unrelated destination. The Node Sub-Store `HTTP()` client was locally probed on Node 24.21.0 with GET/HEAD bodies and a cross-origin redirect; that is not a guarantee for other runtimes or proxy settings. The host controls proxy and request timeouts; this package does not replace its policy.
+
+The optional `RequestInit.signal` indicates cancellation. An adapter should forward it only if its host client supports it; otherwise `sendDetailed`'s `timeoutMs` bounds the reported outcome but cannot prove the underlying network request stopped. Configure the host's own timeout as well. `send` and reusable senders do not impose a deadline. Transport errors are reduced to `notification delivery failed` at the public API; do not log unredacted host errors elsewhere.
 
 ## Installation
 

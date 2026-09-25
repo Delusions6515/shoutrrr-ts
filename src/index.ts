@@ -1,4 +1,5 @@
-import { createSender as createCoreSender, send as sendCore } from "@shoutrrr-ts/core-internal";
+import { createSender as createCoreSender, send as sendCore, withTransport } from "@shoutrrr-ts/core-internal";
+import type { HttpTransport } from "@shoutrrr-ts/core-internal";
 import { registerStableServices } from "./register-stable-services.ts";
 import { parseURL, redactURL } from "./url-tools.ts";
 
@@ -7,12 +8,17 @@ registerStableServices();
 export { formatURL, parseURL, redactURL, validateURL } from "./url-tools.ts";
 export type { ParsedURL } from "./url-tools.ts";
 
+/** Fetch-shaped transport; Generic GET/HEAD notifications require support for request bodies. */
+export type { HttpTransport } from "@shoutrrr-ts/core-internal";
+
 export interface Sender {
   send(message: string, params?: Record<string, string>, options?: Pick<SendOptions, "signal">): Promise<Error[]>;
   sendAsync(message: string, params?: Record<string, string>, options?: Pick<SendOptions, "signal">): Promise<Error[]>;
 }
 
 export interface SendOptions {
+  /** Use this transport for the delivery instead of the built-in HTTP transport. */
+  transport?: HttpTransport;
   /** Per-target timeout in milliseconds. Omit to use the transport's normal behavior. */
   timeoutMs?: number;
   /** Cancels this target without affecting any other target. */
@@ -41,21 +47,25 @@ function publicError(error: unknown): Error {
 }
 
 /** Sends one message through a registered stable service. */
-export async function send(rawURL: string, message: string, options: Pick<SendOptions, "signal"> = {}): Promise<void> {
+export async function send(rawURL: string, message: string, options: Pick<SendOptions, "signal" | "transport"> = {}): Promise<void> {
   try {
-    await sendCore(rawURL, message, options);
+    await withTransport(options.transport, () => sendCore(rawURL, message, options));
   } catch (error) {
     throw publicError(error);
   }
 }
 
 /** Creates a reusable best-effort sender for stable service URLs. */
-export function createSender(...rawURLs: string[]): Sender {
+export function createSender(...rawURLs: string[]): Sender;
+export function createSender(options: Pick<SendOptions, "transport">, ...rawURLs: string[]): Sender;
+export function createSender(...args: [Pick<SendOptions, "transport">, ...string[]] | string[]): Sender {
   try {
+    const injected = typeof args[0] === "string" ? undefined : args[0]?.transport;
+    const rawURLs = typeof args[0] === "string" || args.length === 0 ? args as string[] : args.slice(1) as string[];
     const sender = createCoreSender(...rawURLs);
     return {
-      send: async (message, params, options) => (await sender.send(message, params, options)).map(publicError),
-      sendAsync: async (message, params, options) => (await sender.sendAsync(message, params, options)).map(publicError),
+      send: async (message, params, options) => (await withTransport(injected, () => sender.send(message, params, options))).map(publicError),
+      sendAsync: async (message, params, options) => (await withTransport(injected, () => sender.sendAsync(message, params, options))).map(publicError),
     };
   } catch (error) {
     throw publicError(error);
@@ -82,7 +92,7 @@ export async function sendDetailed(
       if (options.signal?.aborted) controller.abort();
       options.signal?.addEventListener("abort", abort, { once: true });
       try {
-        const delivery = send(rawURL, message, { signal: controller.signal });
+        const delivery = send(rawURL, message, { signal: controller.signal, transport: options.transport });
         if (options.timeoutMs === undefined) {
           await delivery;
         } else {

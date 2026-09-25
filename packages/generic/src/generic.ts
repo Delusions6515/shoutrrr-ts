@@ -2,6 +2,7 @@ import { request as requestHTTP } from "node:http";
 import { request as requestHTTPS } from "node:https";
 import {
   JsonClient,
+  getTransport,
   type Logger,
   type Params,
   PropKeyResolver,
@@ -215,7 +216,7 @@ export class GenericService implements Service {
     const method = config.requestMethod.toUpperCase();
     let responseBody: string;
     let responseStatus: number;
-    if (method === "GET" || method === "HEAD") {
+    if ((method === "GET" || method === "HEAD") && !getTransport()) {
       const response = await requestWithBody(
         config.requestMethod,
         postURL,

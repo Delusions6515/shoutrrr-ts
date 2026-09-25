@@ -12,6 +12,8 @@
  * pool / proxy / MockAgent) or a `fetch` override (`FetchLike`, used by tests on
  * Bun where undici's MockAgent does not work).
  */
+import { getTransport } from "./transport.ts";
+
 /** Default content type for JSON (port of jsonclient.ContentType). */
 export const ContentType = "application/json";
 
@@ -45,7 +47,7 @@ export class JsonClient {
   private readonly fetchImpl: FetchLike;
 
   constructor(opts: JsonClientOptions = {}) {
-    this.fetchImpl = opts.fetch ?? ((input, init) => fetch(input, init));
+    this.fetchImpl = opts.fetch ?? getTransport() ?? ((input, init) => fetch(input, init));
   }
 
   /** GET with a JSON response. */

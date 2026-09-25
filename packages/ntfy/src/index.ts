@@ -1,5 +1,5 @@
 import {
-  EnumlessConfig, PropKeyResolver, createEnumFormatter,
+  EnumlessConfig, PropKeyResolver, createEnumFormatter, getTransport,
   type EnumFormatter, type FieldSchema, type Logger, type Params, type Service, type ServiceSendOptions,
 } from "@shoutrrr-ts/core-internal";
 
@@ -91,7 +91,9 @@ export class NtfyService implements Service {
     if (config.markdown) headers.Markdown = "yes";
     if (config.password) headers.Authorization = `Basic ${Buffer.from(`${config.username}:${config.password}`).toString("base64")}`;
     // A byte body prevents Fetch from adding text/plain, absent from Go's request.
-    const response = await fetch(url, { method: "POST", body: Buffer.from(message), headers, signal: options?.signal });
+    const init = { method: "POST", body: Buffer.from(message), headers, signal: options?.signal };
+    const transport = getTransport();
+    const response = transport ? await transport(url.href, init) : await fetch(url, init);
     const text = await response.text();
     try { JSON.parse(text); } catch { throw new Error("ntfy returned invalid JSON"); }
     if (response.status >= 400) throw new Error("ntfy delivery was rejected");
