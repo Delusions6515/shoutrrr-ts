@@ -49,10 +49,10 @@ The optional `RequestInit.signal` indicates cancellation. An adapter should forw
 Install a fixed release version from the tarball attached to each [GitHub Release](releases):
 
 ```bash
-pnpm add https://github.com/Delusions6515/shoutrrr-ts/releases/download/v0.1.0/shoutrrr-ts-0.1.0.tgz
+pnpm add https://github.com/Delusions6515/shoutrrr-ts/releases/download/v0.2.0/shoutrrr-ts-0.2.0.tgz
 ```
 
-You can also download the asset and install it locally with `pnpm add ./shoutrrr-ts-0.1.0.tgz`. Each release uploads a `SHA256SUMS` checksum file so you can verify the tarball.
+You can also download the asset and install it locally with `pnpm add ./shoutrrr-ts-0.2.0.tgz`. Each release uploads a `SHA256SUMS` checksum file so you can verify the tarball.
 
 ## Stable services
 
